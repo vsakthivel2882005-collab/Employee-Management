@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>Employee Management System | Sakthivel</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap');
+
+:root{
+  --bg:#080808;
+  --panel:#111;
+  --panel2:#181818;
+  --gold:#d4af37;
+  --gold2:#f4df91;
+  --text:#f5f5f5;
+  --muted:#999;
+  --border:rgba(212,175,55,.23);
+  --green:#35c98a;
+  --red:#ff6868;
+  --blue:#68aaff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.container{width:min(1250px,94%);margin:auto}
+header{
+  background:#0c0c0c;
+  border-bottom:1px solid var(--border);
+  padding:17px 0;
+}
+.nav{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:15px;flex-wrap:wrap;
+}
+.logo{
+  color:var(--gold);
+  font-family:'Playfair Display',serif;
+  font-size:24px;font-weight:800;
+}
+.logo span{color:white}
+.nav-right{color:var(--muted);font-size:13px}
+main{padding:35px 0 60px}
+.heading{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:15px;flex-wrap:wrap;
+  margin-bottom:28px;
+}
+h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(27px,4vw,38px);
+}
+.gold{color:var(--gold)}
+.subtitle{color:var(--muted);font-size:14px;margin-top:5px}
+.btn{
+  border:1px solid var(--gold);
+  background:var(--gold);color:#080808;
+  padding:11px 17px;border-radius:6px;
+  font-weight:700;transition:.2s;
+}
+.btn:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--gold)}
+.btn-danger{background:#351717;color:#ff8888;border-color:#713333}
+.btn-small{padding:7px 11px;font-size:12px}
+.dashboard{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:16px;margin-bottom:28px;
+}
+.stat{
+  background:linear-gradient(145deg,#191919,#101010);
+  border:1px solid var(--border);
+  border-radius:12px;padding:20px;
+}
+.stat-label{color:var(--muted);font-size:13px}
+.stat-value{
+  color:var(--gold);font-size:29px;
+  font-weight:700;margin-top:8px;
+}
+.stat-icon{font-size:20px;float:right}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;padding:22px;
+  margin-bottom:23px;
+}
+.panel-head{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.panel h2{
+  font-family:'Playfair Display',serif;
+  font-size:21px;
+}
+.controls{
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+input,select{
+  background:#080808;color:white;
+  border:1px solid #383838;border-radius:6px;
+  padding:11px 12px;outline:none;min-width:0;
+}
+input:focus,select:focus{border-color:var(--gold)}
+.search{width:min(100%,320px)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th{
+  text-align:left;color:var(--gold);
+  font-size:12px;text-transform:uppercase;
+  letter-spacing:.5px;padding:14px 12px;
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:14px 12px;border-bottom:1px solid #292929;
+  font-size:13px;color:#ddd;
+}
+tbody tr:hover{background:#191919}
+.employee-name{font-weight:700;color:white}
+.muted{color:var(--muted)}
+.pill{
+  display:inline-block;padding:5px 9px;
+  border-radius:20px;font-size:11px;font-weight:700;
+}
+.active{background:#123526;color:#62e6a8}
+.present{background:#123526;color:#62e6a8}
+.absent{background:#3b1919;color:#ff8585}
+.leave{background:#302914;color:#e9c76a}
+.actions{display:flex;gap:6px}
+.action{
+  padding:6px 9px;border-radius:5px;
+  border:1px solid #444;background:#202020;color:white;
+  font-size:12px;
+}
+.action.edit{color:var(--gold);border-color:var(--border)}
+.action.delete{color:#ff8888}
+.empty{
+  text-align:center;color:var(--muted);
+  padding:35px 10px;
+}
+.form-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-size:12px;color:var(--gold)}
+.field input,.field select{width:100%}
+.full{grid-column:1/-1}
+.modal{
+  position:fixed;inset:0;z-index:20;
+  background:rgba(0,0,0,.8);
+  display:none;align-items:center;justify-content:center;
+  padding:15px;overflow-y:auto;
+}
+.modal.show{display:flex}
+.modal-box{
+  width:min(550px,100%);
+  background:#141414;border:1px solid var(--gold);
+  border-radius:13px;padding:25px;
+  max-height:92vh;overflow-y:auto;
+}
+.modal-head{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:20px;
+}
+.modal-head h2{font-family:'Playfair Display',serif}
+.close{
+  border:0;background:none;color:white;
+  font-size:25px;cursor:pointer;
+}
+.form-actions{
+  display:flex;gap:10px;justify-content:flex-end;
+  margin-top:22px;
+}
+.tabs{display:flex;gap:9px;flex-wrap:wrap}
+.tab{
+  padding:9px 14px;border:1px solid #444;
+  border-radius:6px;color:#ddd;background:#171717;
+}
+.tab.active-tab{background:var(--gold);color:#000;border-color:var(--gold)}
+.attendance-date{width:170px}
+.notice{
+  font-size:12px;color:var(--muted);
+  margin-top:12px;line-height:1.6;
+}
+footer{
+  text-align:center;color:var(--muted);
+  border-top:1px solid var(--border);
+  padding:22px;font-size:12px;
+}
+@media(max-width:800px){
+  .dashboard{grid-template-columns:repeat(2,1fr)}
+  .heading{align-items:flex-start}
+}
+@media(max-width:520px){
+  .dashboard{gap:9px}
+  .stat{padding:14px}
+  .stat-value{font-size:23px}
+  .panel{padding:14px}
+  .form-grid{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  .search{width:100%}
+  .heading .btn{width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+    <div class="logo">EMS<span>.</span></div>
+    <div class="nav-right">EMPLOYEE MANAGEMENT SYSTEM</div>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="heading">
+    <div>
+      <h1>Employee <span class="gold">Dashboard</span></h1>
+      <p class="subtitle">Manage employees, salaries and daily attendance.</p>
+    </div>
+    <button class="btn" onclick="openEmployeeModal()">+ Add Employee</button>
+  </div>
+
+  <!-- DASHBOARD STATS -->
+  <section class="dashboard">
+    <div class="stat">
+      <span class="stat-icon">👥</span>
+      <div class="stat-label">Total Employees</div>
+      <div class="stat-value" id="totalEmployees">0</div>
+    </div>
+    <div class="stat">
+      <span class="stat-icon">✅</span>
+      <div class="stat-label">Present Today</div>
+      <div class="stat-value" id="presentCount">0</div>
+    </div>
+    <div class="stat">
+      <span class="stat-icon">❌</span>
+      <div class="stat-label">Absent Today</div>
+      <div class="stat-value" id="absentCount">0</div>
+    </div>
+    <div class="stat">
+      <span class="stat-icon">💰</span>
+      <div class="stat-label">Monthly Salary Total</div>
+      <div class="stat-value" id="salaryTotal">₹0</div>
+    </div>
+  </section>
+
+  <!-- EMPLOYEE SECTION -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Employee Records</h2>
+      <div class="controls">
+        <input class="search" id="searchInput"
+          placeholder="Search name, ID or department..."
+          oninput="renderEmployees()">
+        <button class="btn btn-outline btn-small" onclick="exportCSV()">
+          Export CSV
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Phone</th>
+            <th>Salary / Month</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="employeeTable"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="employeeEmpty" style="display:none">
+      No employees found. Click Add Employee to get started.
+    </div>
+  </section>
+
+  <!-- ATTENDANCE SECTION -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Daily <span class="gold">Attendance</span></h2>
+      <div class="controls">
+        <input type="date" id="attendanceDate"
+          class="attendance-date" onchange="renderAttendance()">
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Department</th>
+            <th>Attendance Status</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceTable"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="attendanceEmpty" style="display:none">
+      Add employees to start marking attendance.
+    </div>
+    <p class="notice">Attendance is saved separately for each date in this browser.</p>
+  </section>
+
+  <!-- SALARY SECTION -->
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Salary <span class="gold">Overview</span></h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Department</th>
+            <th>Monthly Salary</th>
+            <th>Annual Salary</th>
+          </tr>
+        </thead>
+        <tbody id="salaryTable"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="salaryEmpty" style="display:none">
+      No salary records available.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © <span id="year"></span> EMS | Developed by <span class="gold">Sakthivel V</span>
+</footer>
+
+<!-- EMPLOYEE MODAL -->
+<div class="modal" id="employeeModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modalTitle">Add Employee</h2>
+      <button class="close" onclick="closeEmployeeModal()">×</button>
+    </div>
+
+    <form id="employeeForm">
+      <div class="form-grid">
+
+        <div class="field">
+          <label>Employee ID *</label>
+          <input id="empId" required placeholder="EMP001">
+        </div>
+
+        <div class="field">
+          <label>Employee Name *</label>
+          <input id="empName" required placeholder="Enter full name">
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="empEmail" type="email" placeholder="employee@email.com">
+        </div>
+
+        <div class="field">
+          <label>Phone Number *</label>
+          <input id="empPhone" type="tel" required placeholder="Phone number">
+        </div>
+
+        <div class="field">
+          <label>Department *</label>
+          <select id="empDepartment" required>
+            <option value="">Select Department</option>
+            <option>HR</option>
+            <option>IT</option>
+            <option>Finance</option>
+            <option>Marketing</option>
+            <option>Sales</option>
+            <option>Operations</option>
+            <option>Administration</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Designation</label>
+          <input id="empDesignation" placeholder="Job title">
+        </div>
+
+        <div class="field">
+          <label>Monthly Salary (₹) *</label>
+          <input id="empSalary" type="number" min="0" step="0.01" required placeholder="25000">
+        </div>
+
+        <div class="field">
+          <label>Joining Date</label>
+          <input id="empJoining" type="date">
+        </div>
+
+        <div class="field full">
+          <label>Employee Status</label>
+          <select id="empStatus">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" onclick="closeEmployeeModal()">Cancel</button>
+        <button type="submit" class="btn">Save Employee</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// =================================
+// LOCAL STORAGE DATABASE
+// =================================
+
+const EMP_KEY = "sakthi_ems_employees_v1";
+const ATT_KEY = "sakthi_ems_attendance_v1";
+
+let employees = loadData(EMP_KEY, []);
+let attendance = loadData(ATT_KEY, {});
+let editingId = null;
+
+function loadData(key, fallback){
+  try{
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : fallback;
+  }catch(error){
+    console.error("Storage read error:", error);
+    return fallback;
+  }
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(EMP_KEY, JSON.stringify(employees));
+    localStorage.setItem(ATT_KEY, JSON.stringify(attendance));
+  }catch(error){
+    alert("Unable to save data. Check your browser storage.");
+  }
+}
+
+// =================================
+// HELPERS
+// =================================
+
+function today(){
+  const d = new Date();
+  const offset = d.getTimezoneOffset();
+  return new Date(d.getTime() - offset * 60000)
+    .toISOString().slice(0,10);
+}
+
+function money(value){
+  return Number(value || 0).toLocaleString("en-IN",{
+    style:"currency",
+    currency:"INR",
+    maximumFractionDigits:2
+  });
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+function getAttendance(date){
+  return attendance[date] || {};
+}
+
+// =================================
+// EMPLOYEE MODAL
+// =================================
+
+function openEmployeeModal(id=null){
+  editingId = id;
+  document.getElementById("employeeForm").reset();
+
+  if(id){
+    const emp = employees.find(e => e.id === id);
+    if(!emp) return;
+
+    document.getElementById("modalTitle").textContent = "Edit Employee";
+    document.getElementById("empId").value = emp.empId;
+    document.getElementById("empId").readOnly = true;
+    document.getElementById("empName").value = emp.name;
+    document.getElementById("empEmail").value = emp.email || "";
+    document.getElementById("empPhone").value = emp.phone;
+    document.getElementById("empDepartment").value = emp.department;
+    document.getElementById("empDesignation").value = emp.designation || "";
+    document.getElementById("empSalary").value = emp.salary;
+    document.getElementById("empJoining").value = emp.joining || "";
+    document.getElementById("empStatus").value = emp.status;
+  }else{
+    document.getElementById("modalTitle").textContent = "Add Employee";
+    document.getElementById("empId").readOnly = false;
+    document.getElementById("empStatus").value = "Active";
+  }
+
+  document.getElementById("employeeModal").classList.add("show");
+}
+
+function closeEmployeeModal(){
+  document.getElementById("employeeModal").classList.remove("show");
+  editingId = null;
+  document.getElementById("empId").readOnly = false;
+}
+
+// =================================
+// ADD / EDIT EMPLOYEE
+// =================================
+
+document.getElementById("employeeForm").addEventListener("submit",function(e){
+  e.preventDefault();
+
+  const empId = document.getElementById("empId").value.trim();
+  const name = document.getElementById("empName").value.trim();
+  const email = document.getElementById("empEmail").value.trim();
+  const phone = document.getElementById("empPhone").value.trim();
+  const department = document.getElementById("empDepartment").value;
+  const designation = document.getElementById("empDesignation").value.trim();
+  const salary = Number(document.getElementById("empSalary").value);
+  const joining = document.getElementById("empJoining").value;
+  const status = document.getElementById("empStatus").value;
+
+  if(!empId || !name || !phone || !department || !Number.isFinite(salary) || salary < 0){
+    alert("Please enter valid employee details.");
+    return;
+  }
+
+  const duplicate = employees.some(e =>
+    e.empId.toLowerCase() === empId.toLowerCase() &&
+    e.id !== editingId
+  );
+
+  if(duplicate){
+    alert("This Employee ID already exists.");
+    return;
+  }
+
+  const data = {
+    id: editingId || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
+    empId,name,email,phone,department,designation,
+    salary,joining,status
+  };
+
+  if(editingId){
+    employees = employees.map(e => e.id === editingId ? data : e);
+  }else{
+    employees.push(data);
+  }
+
+  saveData();
+  closeEmployeeModal();
+  renderAll();
+});
+
+// =================================
+// DELETE EMPLOYEE
+// =================================
+
+function deleteEmployee(id){
+  const emp = employees.find(e => e.id === id);
+  if(!emp) return;
+
+  if(!confirm("Delete employee " + emp.name + "? This will also remove their attendance records.")) return;
+
+  employees = employees.filter(e => e.id !== id);
+
+  Object.keys(attendance).forEach(date => {
+    delete attendance[date][id];
+  });
+
+  saveData();
+  renderAll();
+}
+
+// =================================
+// EMPLOYEE TABLE + SEARCH
+// =================================
+
+function renderEmployees(){
+  const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+  const filtered = employees.filter(e =>
+    [e.empId,e.name,e.department,e.phone,e.designation]
+    .some(v => String(v || "").toLowerCase().includes(query))
+  );
+
+  const tbody = document.getElementById("employeeTable");
+  document.getElementById("employeeEmpty").style.display =
+    filtered.length ? "none" : "block";
+
+  tbody.innerHTML = filtered.map(e => `
+    <tr>
+      <td>${escapeHTML(e.empId)}</td>
+      <td>
+        <div class="employee-name">${escapeHTML(e.name)}</div>
+        <div class="muted">${escapeHTML(e.email || "")}</div>
+      </td>
+      <td>${escapeHTML(e.department)}</td>
+      <td>${escapeHTML(e.phone)}</td>
+      <td>${money(e.salary)}</td>
+      <td>
+        <span class="pill ${e.status === "Active" ? "active" : "leave"}">
+          ${escapeHTML(e.status)}
+        </span>
+      </td>
+      <td>
+        <div class="actions">
+          <button class="action edit" onclick="openEmployeeModal('${e.id}')">Edit</button>
+          <button class="action delete" onclick="deleteEmployee('${e.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+}
+
+// =================================
+// ATTENDANCE
+// =================================
+
+function renderAttendance(){
+  const date = document.getElementById("attendanceDate").value;
+  const dayData = getAttendance(date);
+
+  const tbody = document.getElementById("attendanceTable");
+  const empty = document.getElementById("attendanceEmpty");
+
+  empty.style.display = employees.length ? "none" : "block";
+
+  tbody.innerHTML = employees.map(e => {
+    const status = dayData[e.id] || "";
+
+    return `
+      <tr>
+        <td>${escapeHTML(e.empId)}</td>
+        <td class="employee-name">${escapeHTML(e.name)}</td>
+        <td>${escapeHTML(e.department)}</td>
+        <td>
+          <select onchange="setAttendance('${e.id}',this.value)"
+            aria-label="Attendance for ${escapeHTML(e.name)}">
+            <option value="" ${status === "" ? "selected" : ""}>Not Marked</option>
+            <option value="Present" ${status === "Present" ? "selected" : ""}>Present</option>
+            <option value="Absent" ${status === "Absent" ? "selected" : ""}>Absent</option>
+            <option value="Leave" ${status === "Leave" ? "selected" : ""}>Leave</option>
+          </select>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function setAttendance(id,status){
+  const date = document.getElementById("attendanceDate").value;
+
+  if(!attendance[date]) attendance[date] = {};
+
+  if(status){
+    attendance[date][id] = status;
+  }else{
+    delete attendance[date][id];
+  }
+
+  saveData();
+  updateDashboard();
+}
+
+// =================================
+// SALARY TABLE
+// =================================
+
+function renderSalary(){
+  const tbody = document.getElementById("salaryTable");
+  document.getElementById("salaryEmpty").style.display =
+    employees.length ? "none" : "block";
+
+  tbody.innerHTML = employees.map(e => `
+    <tr>
+      <td>${escapeHTML(e.empId)}</td>
+      <td class="employee-name">${escapeHTML(e.name)}</td>
+      <td>${escapeHTM
