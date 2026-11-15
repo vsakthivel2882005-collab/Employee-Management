@@ -6,38 +6,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080808">
 <title>EMS 2.0 | Premium HR Management</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--gold:#d6ad55;--bg:#080808;--panel:#151515;--text:#f5f5f5;--muted:#aaa}
+:root{
+ --gold:#d6ad55;
+ --bg:#080808;
+ --panel:#151515;
+ --text:#f5f5f5;
+ --muted:#aaa;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,sans-serif
+}
 button,input,select{font:inherit}
 button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
 .hidden{display:none!important}
-header{padding:17px 22px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}
+header{
+ padding:17px 22px;border-bottom:1px solid #333;
+ display:flex;justify-content:space-between;align-items:center
+}
 .logo{font-size:21px;font-weight:bold;color:var(--gold)}
 .container{max-width:1100px;margin:30px auto;padding:0 16px}
-.card{background:var(--panel);border:1px solid #333;border-radius:13px;padding:22px;margin-bottom:18px}
+.card{
+ background:var(--panel);border:1px solid #333;
+ border-radius:13px;padding:22px;margin-bottom:18px
+}
 h2,h3{color:var(--gold)}
-input,select{width:100%;padding:12px;margin:7px 0 14px;border-radius:7px;border:1px solid #444;background:#090909;color:white}
-button{border:0;border-radius:7px;padding:11px 16px;background:var(--gold);color:#111;font-weight:bold}
-button.secondary{background:#292929;color:white;border:1px solid #555}
+input,select{
+ width:100%;padding:12px;margin:7px 0 14px;
+ border-radius:7px;border:1px solid #444;
+ background:#090909;color:white
+}
+button{
+ border:0;border-radius:7px;padding:11px 16px;
+ background:var(--gold);color:#111;font-weight:bold
+}
+button.secondary{
+ background:#292929;color:white;border:1px solid #555
+}
 button.danger{background:#7f1d1d;color:white}
-button:disabled{opacity:.5}
 .login{max-width:420px;margin:65px auto}
-.message{padding:12px;margin:12px 0;border-radius:7px;background:#252525;display:none;overflow-wrap:anywhere;line-height:1.5}
+.message{
+ padding:12px;margin:12px 0;border-radius:7px;
+ background:#252525;display:none;overflow-wrap:anywhere;
+ line-height:1.5
+}
 .success{border:1px solid #228b55;color:#8ee5b2}
 .error{border:1px solid #a33;color:#ffaaaa}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:14px
+}
 .stat{background:#202020;padding:18px;border-radius:10px}
-.stat strong{font-size:27px;color:var(--gold);display:block;margin-top:8px}
+.stat strong{
+ font-size:27px;color:var(--gold);display:block;margin-top:8px
+}
 nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
 nav button{background:#222;color:white;border:1px solid #444}
 nav button.active{background:var(--gold);color:#111}
+.table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:650px}
 th,td{padding:12px;text-align:left;border-bottom:1px solid #333}
 th{color:var(--gold)}
-.table-wrap{overflow-x:auto}
 .small{color:var(--muted);font-size:13px}
 a{color:var(--gold)}
 footer{text-align:center;color:#777;padding:25px}
@@ -49,6 +84,7 @@ footer{text-align:center;color:#777;padding:25px}
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -62,11 +98,19 @@ footer{text-align:center;color:#777;padding:25px}
   <h2>Admin Login</h2>
   <p class="small">Secure HR Management Portal</p>
   <div id="loginMsg" class="message"></div>
-  <label>Admin Email</label>
-  <input id="email" type="email" placeholder="Enter admin email">
-  <label>Password</label>
-  <input id="password" type="password" placeholder="Enter password">
-  <button id="loginBtn" style="width:100%" onclick="login()">Secure Login</button>
+
+  <form id="loginForm">
+   <label>Admin Email</label>
+   <input id="email" type="email" placeholder="Enter admin email" required>
+
+   <label>Password</label>
+   <input id="password" type="password" placeholder="Enter password" required>
+
+   <button id="loginBtn" type="submit" style="width:100%">
+    Secure Login
+   </button>
+  </form>
+
   <p style="text-align:center">
    <a href="#" onclick="showForgot();return false">Forgot Password?</a>
   </p>
@@ -79,8 +123,13 @@ footer{text-align:center;color:#777;padding:25px}
   <h2>Reset Password</h2>
   <p class="small">Enter your registered admin email.</p>
   <div id="forgotMsg" class="message"></div>
+
   <input id="forgotEmail" type="email" placeholder="Admin email">
-  <button id="resetBtn" style="width:100%" onclick="sendReset()">Send Reset Link</button>
+
+  <button id="resetBtn" style="width:100%" onclick="sendReset()">
+   Send Reset Link
+  </button>
+
   <p><a href="#" onclick="showLogin();return false">Back to Login</a></p>
  </div>
 </section>
@@ -91,14 +140,22 @@ footer{text-align:center;color:#777;padding:25px}
   <h2>Create New Password</h2>
   <p class="small">Enter your new password below.</p>
   <div id="updateMsg" class="message"></div>
-  <input id="newPassword" type="password" placeholder="New password (minimum 8 characters)">
-  <input id="confirmPassword" type="password" placeholder="Confirm new password">
-  <button style="width:100%" onclick="updatePassword()">Update Password</button>
+
+  <input id="newPassword" type="password"
+   placeholder="New password (minimum 8 characters)">
+
+  <input id="confirmPassword" type="password"
+   placeholder="Confirm new password">
+
+  <button id="updateBtn" style="width:100%" onclick="updatePassword()">
+   Update Password
+  </button>
  </div>
 </section>
 
 <!-- MAIN APP -->
 <main id="appPage" class="container hidden">
+
  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
   <h2>HR Dashboard</h2>
   <button class="danger" onclick="logout()">Logout</button>
@@ -111,606 +168,945 @@ footer{text-align:center;color:#777;padding:25px}
   <button onclick="openTab('payroll',this)">Payroll</button>
  </nav>
 
+ <!-- DASHBOARD -->
  <section id="dashboardTab">
   <div class="grid">
    <div class="stat">Total Employees<strong id="totalEmployees">0</strong></div>
    <div class="stat">Present Today<strong id="presentCount">0</strong></div>
    <div class="stat">Payroll Records<strong id="payrollCount">0</strong></div>
   </div>
+
   <div class="card">
    <h3>Welcome to EMS 2.0</h3>
    <p>Manage employees, attendance and payroll from one place.</p>
   </div>
  </section>
 
+ <!-- EMPLOYEES -->
  <section id="employeesTab" class="hidden">
+
   <div class="card">
    <h3>Add / Edit Employee</h3>
    <input id="empId" type="hidden">
+
    <label>Employee Name</label>
    <input id="empName" placeholder="Employee name">
+
    <label>Mobile Number</label>
    <input id="empPhone" placeholder="Mobile number">
+
    <label>Email</label>
    <input id="empEmail" type="email" placeholder="Email">
+
    <label>Department</label>
    <input id="empDepartment" placeholder="Department">
+
    <label>Designation</label>
    <input id="empDesignation" placeholder="Designation">
+
    <label>Monthly Salary</label>
    <input id="empSalary" type="number" placeholder="Salary">
+
    <button onclick="saveEmployee()">Save Employee</button>
    <button class="secondary" onclick="clearEmployee()">Clear</button>
+
    <div id="empMsg" class="message"></div>
   </div>
 
   <div class="card">
    <h3>Employee List</h3>
    <input id="empSearch" placeholder="Search employees..." oninput="renderEmployees()">
+
    <div class="table-wrap">
     <table>
-     <thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Salary</th><th>Actions</th></tr></thead>
+     <thead>
+      <tr>
+       <th>Name</th><th>Phone</th><th>Department</th>
+       <th>Salary</th><th>Actions</th>
+      </tr>
+     </thead>
      <tbody id="employeeRows"></tbody>
     </table>
    </div>
   </div>
  </section>
 
+ <!-- ATTENDANCE -->
  <section id="attendanceTab" class="hidden">
   <div class="card">
    <h3>Mark Attendance</h3>
+
    <label>Employee</label>
    <select id="attendanceEmployee"></select>
+
    <label>Date</label>
    <input type="date" id="attendanceDate">
+
    <label>Status</label>
    <select id="attendanceStatus">
     <option>Present</option>
     <option>Absent</option>
     <option>Leave</option>
    </select>
+
    <button onclick="saveAttendance()">Save Attendance</button>
    <div id="attendanceMsg" class="message"></div>
   </div>
+
   <div class="card">
    <h3>Attendance Records</h3>
    <div class="table-wrap">
     <table>
-     <thead><tr><th>Date</th><th>Employee</th><th>Status</th></tr></thead>
+     <thead>
+      <tr><th>Date</th><th>Employee</th><th>Status</th></tr>
+     </thead>
      <tbody id="attendanceRows"></tbody>
     </table>
    </div>
   </div>
  </section>
 
+ <!-- PAYROLL -->
  <section id="payrollTab" class="hidden">
   <div class="card">
    <h3>Add Payroll Record</h3>
+
    <label>Employee</label>
    <select id="payrollEmployee"></select>
+
    <label>Month</label>
    <input type="month" id="payrollMonth">
+
    <label>Amount</label>
    <input type="number" id="payrollAmount" placeholder="Salary amount">
+
    <button onclick="savePayroll()">Save Payroll</button>
    <div id="payrollMsg" class="message"></div>
   </div>
+
   <div class="card">
    <h3>Payroll History</h3>
    <div class="table-wrap">
     <table>
-     <thead><tr><th>Employee</th><th>Month</th><th>Amount</th></tr></thead>
+     <thead>
+      <tr><th>Employee</th><th>Month</th><th>Amount</th></tr>
+     </thead>
      <tbody id="payrollRows"></tbody>
     </table>
    </div>
   </div>
  </section>
+
 </main>
 
 <footer>EMS 2.0 | Secure HR Management</footer>
 
 <script>
-/* SUPABASE CONFIGURATION */
-const SUPABASE_URL = "https://soxelkicpckxirvbtmfy.supabase.co";
-const SUPABASE_KEY = "sb_publishable_i6ISZrns3VI9M0VsGQO8dw_f8cynJx3";
-const ADMIN_UUID = "a3f5bd5f-7ec6-4cb6-b1bc-29481aa7bc49";
+"use strict";
 
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+/* ==================================
+   SUPABASE CONFIGURATION
+================================== */
+
+const SUPABASE_URL =
+ "https://soxelkicpckxirvbtmfy.supabase.co";
+
+const SUPABASE_KEY =
+ "sb_publishable_i6ISZrns3VI9M0VsGQO8dw_f8cynJx3";
+
+const ADMIN_UUID =
+ "a3f5bd5f-7ec6-4cb6-b1bc-29481aa7bc49";
+
+let db = null;
 
 let employees = [];
 let attendance = [];
 let payroll = [];
-let inactivityTimer;
+let inactivityTimer = null;
 
-/* MESSAGE */
-function showMessage(id,text,type="success"){
- const el=document.getElementById(id);
- el.textContent=text;
- el.className="message "+type;
- el.style.display="block";
+/* ==================================
+   INITIALIZE SUPABASE
+================================== */
+
+try {
+ if (!window.supabase || !window.supabase.createClient) {
+  throw new Error("Supabase library could not load. Check internet connection.");
+ }
+
+ db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+ );
+
+} catch (error) {
+ console.error("Supabase initialization error:", error);
+ alert("Supabase initialization failed: " + error.message);
 }
 
-function hidePages(){
- ["loginPage","forgotPage","updatePage","appPage"].forEach(id=>{
+/* ==================================
+   COMMON FUNCTIONS
+================================== */
+
+function showMessage(id, text, type = "success") {
+ const el = document.getElementById(id);
+
+ if (!el) return;
+
+ el.textContent = text;
+ el.className = "message " + type;
+ el.style.display = "block";
+}
+
+function hideMessage(id) {
+ const el = document.getElementById(id);
+
+ if (el) {
+  el.style.display = "none";
+ }
+}
+
+function hidePages() {
+ [
+  "loginPage",
+  "forgotPage",
+  "updatePage",
+  "appPage"
+ ].forEach(id => {
   document.getElementById(id).classList.add("hidden");
  });
 }
 
-function showLogin(){
+function showLogin() {
  hidePages();
  document.getElementById("loginPage").classList.remove("hidden");
 }
 
-function showForgot(){
+function showForgot() {
  hidePages();
+
  document.getElementById("forgotPage").classList.remove("hidden");
- document.getElementById("forgotEmail").value=
+
+ document.getElementById("forgotEmail").value =
   document.getElementById("email").value.trim();
+
+ hideMessage("forgotMsg");
 }
 
-function showUpdate(){
+function showUpdate() {
  hidePages();
+
  document.getElementById("updatePage").classList.remove("hidden");
+
+ hideMessage("updateMsg");
 }
 
-/* UPDATED ADMIN LOGIN WITH UUID DIAGNOSTICS */
-async function login(){
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
+function esc(value) {
+ return String(value ?? "").replace(/[&<>"']/g, char => ({
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;"
+ }[char]));
+}
 
- if(!email||!password){
-  return showMessage("loginMsg","Enter email and password.","error");
+function requireDatabase() {
+ if (!db) {
+  throw new Error("Supabase is not initialized. Refresh the website.");
+ }
+}
+
+/* ==================================
+   ADMIN LOGIN
+================================== */
+
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+ event.preventDefault();
+ await login();
+});
+
+async function login() {
+ const email = document.getElementById("email").value.trim();
+ const password = document.getElementById("password").value;
+
+ if (!email || !password) {
+  return showMessage(
+   "loginMsg",
+   "Enter email and password.",
+   "error"
+  );
  }
 
- const btn=document.getElementById("loginBtn");
- btn.disabled=true;
- btn.textContent="Checking...";
+ const btn = document.getElementById("loginBtn");
 
- try{
-  const {data,error}=await db.auth.signInWithPassword({
-   email:email,
-   password:password
+ btn.disabled = true;
+ btn.textContent = "Checking...";
+
+ hideMessage("loginMsg");
+
+ try {
+  requireDatabase();
+
+  const { data, error } = await db.auth.signInWithPassword({
+   email: email,
+   password: password
   });
 
-  if(error){
-   return showMessage("loginMsg",error.message,"error");
+  if (error) {
+   throw error;
   }
 
-  const user=data.user;
+  const user = data.user;
 
-  if(!user){
+  if (!user) {
    await db.auth.signOut();
-   return showMessage("loginMsg","Supabase user not found.","error");
+   throw new Error("Supabase user not found.");
   }
 
-  if(user.id!==ADMIN_UUID){
-   const actualId=user.id;
+  if (user.id !== ADMIN_UUID) {
+   const actualId = user.id;
+
    await db.auth.signOut();
 
-   return showMessage(
-    "loginMsg",
-    "UUID MISMATCH. Actual Supabase ID: "+actualId+
-    " | Configured Admin ID: "+ADMIN_UUID,
-    "error"
+   throw new Error(
+    "Admin UUID mismatch. Actual ID: " +
+    actualId +
+    " | Configured ID: " +
+    ADMIN_UUID
    );
   }
 
-  const {data:allowed,error:rpcError}=await db.rpc("is_ems_admin");
+  const { data: allowed, error: rpcError } =
+   await db.rpc("is_ems_admin");
 
-  if(rpcError){
+  if (rpcError) {
    await db.auth.signOut();
-   return showMessage(
-    "loginMsg",
-    "Admin RPC Error: "+rpcError.message,
-    "error"
+
+   throw new Error(
+    "Admin verification error: " + rpcError.message
    );
   }
 
-  if(allowed!==true){
+  if (allowed !== true) {
    await db.auth.signOut();
-   return showMessage(
-    "loginMsg",
-    "UUID matched, but is_ems_admin returned false. Check ems_admins.user_id.",
-    "error"
+
+   throw new Error(
+    "Admin access denied. Check ems_admins.user_id and RLS settings."
    );
   }
 
   await enterApp(user);
 
- }catch(err){
-  showMessage("loginMsg","Unexpected error: "+err.message,"error");
- }finally{
-  btn.disabled=false;
-  btn.textContent="Secure Login";
+ } catch (error) {
+  console.error("Login error:", error);
+
+  showMessage(
+   "loginMsg",
+   error.message || "Login failed. Please try again.",
+   "error"
+  );
+
+ } finally {
+  btn.disabled = false;
+  btn.textContent = "Secure Login";
  }
 }
 
-/* FORGOT PASSWORD */
-async function sendReset(){
- const email=document.getElementById("forgotEmail").value.trim();
+/* ==================================
+   FORGOT PASSWORD
+================================== */
 
- if(!email){
-  return showMessage("forgotMsg","Enter your registered email.","error");
+async function sendReset() {
+ const email = document.getElementById("forgotEmail").value.trim();
+
+ if (!email) {
+  return showMessage(
+   "forgotMsg",
+   "Enter your registered email.",
+   "error"
+  );
  }
 
- const btn=document.getElementById("resetBtn");
- btn.disabled=true;
- btn.textContent="Sending...";
+ const btn = document.getElementById("resetBtn");
 
- try{
-  const {error}=await db.auth.resetPasswordForEmail(email,{
-   redirectTo:"https://vsakthivel2882005-collab.github.io/Employee-Management/"
+ btn.disabled = true;
+ btn.textContent = "Sending...";
+
+ hideMessage("forgotMsg");
+
+ try {
+  requireDatabase();
+
+  const { error } = await db.auth.resetPasswordForEmail(email, {
+   redirectTo:
+    "https://vsakthivel2882005-collab.github.io/Employee-Management/"
   });
 
-  if(error){
-   return showMessage("forgotMsg",error.message,"error");
-  }
+  if (error) throw error;
 
   showMessage(
    "forgotMsg",
-   "If this email is registered, a password reset link has been sent. Check Inbox and Spam.",
+   "If this email is registered, a reset link has been requested. Check Inbox and Spam.",
    "success"
   );
 
- }catch(err){
-  showMessage("forgotMsg",err.message,"error");
- }finally{
-  btn.disabled=false;
-  btn.textContent="Send Reset Link";
+ } catch (error) {
+  showMessage("forgotMsg", error.message, "error");
+
+ } finally {
+  btn.disabled = false;
+  btn.textContent = "Send Reset Link";
  }
 }
 
-/* UPDATE PASSWORD */
-async function updatePassword(){
- const p=document.getElementById("newPassword").value;
- const c=document.getElementById("confirmPassword").value;
+/* ==================================
+   UPDATE PASSWORD
+================================== */
 
- if(p.length<8){
-  return showMessage("updateMsg","Password must be at least 8 characters.","error");
+async function updatePassword() {
+ const password =
+  document.getElementById("newPassword").value;
+
+ const confirm =
+  document.getElementById("confirmPassword").value;
+
+ if (password.length < 8) {
+  return showMessage(
+   "updateMsg",
+   "Password must be at least 8 characters.",
+   "error"
+  );
  }
 
- if(p!==c){
-  return showMessage("updateMsg","Passwords do not match.","error");
+ if (password !== confirm) {
+  return showMessage(
+   "updateMsg",
+   "Passwords do not match.",
+   "error"
+  );
  }
 
- const {data:sessionData}=await db.auth.getSession();
+ const btn = document.getElementById("updateBtn");
 
- if(!sessionData.session){
-  return showMessage("updateMsg","Reset session expired. Request a new reset link.","error");
+ btn.disabled = true;
+
+ try {
+  requireDatabase();
+
+  const { data } = await db.auth.getSession();
+
+  if (!data.session) {
+   throw new Error(
+    "Reset session expired. Request a new reset link."
+   );
+  }
+
+  const { error } = await db.auth.updateUser({
+   password: password
+  });
+
+  if (error) throw error;
+
+  showMessage(
+   "updateMsg",
+   "Password updated successfully. Please login again.",
+   "success"
+  );
+
+  setTimeout(async () => {
+   await db.auth.signOut();
+   showLogin();
+  }, 1800);
+
+ } catch (error) {
+  showMessage("updateMsg", error.message, "error");
+
+ } finally {
+  btn.disabled = false;
  }
-
- const {error}=await db.auth.updateUser({password:p});
-
- if(error){
-  return showMessage("updateMsg",error.message,"error");
- }
-
- showMessage("updateMsg","Password updated successfully. Please login again.","success");
-
- setTimeout(async()=>{
-  await db.auth.signOut();
-  showLogin();
- },1800);
 }
 
-/* ENTER APP */
-async function enterApp(user){
+/* ==================================
+   ENTER APPLICATION
+================================== */
+
+async function enterApp(user) {
  hidePages();
+
  document.getElementById("appPage").classList.remove("hidden");
- document.getElementById("headerUser").textContent=user.email||"Admin";
- await loadAll();
+
+ document.getElementById("headerUser").textContent =
+  user.email || "Admin";
+
+ try {
+  await loadAll();
+ } catch (error) {
+  console.error("Dashboard loading error:", error);
+  alert("Dashboard loading error: " + error.message);
+ }
+
  resetInactivity();
 }
 
-/* LOGOUT */
-async function logout(){
+/* ==================================
+   LOGOUT & INACTIVITY
+================================== */
+
+async function logout() {
  clearTimeout(inactivityTimer);
- await db.auth.signOut();
- document.getElementById("headerUser").textContent="";
+
+ try {
+  requireDatabase();
+  await db.auth.signOut();
+ } catch (error) {
+  console.error("Logout error:", error);
+ }
+
+ document.getElementById("headerUser").textContent = "";
  showLogin();
 }
 
-function resetInactivity(){
+function resetInactivity() {
  clearTimeout(inactivityTimer);
- inactivityTimer=setTimeout(logout,20*60*1000);
+
+ inactivityTimer = setTimeout(() => {
+  logout();
+ }, 20 * 60 * 1000);
 }
 
-["click","mousemove","keydown","touchstart"].forEach(event=>{
- document.addEventListener(event,()=>{
-  if(!document.getElementById("appPage").classList.contains("hidden")){
+["click", "mousemove", "keydown", "touchstart"].forEach(event => {
+ document.addEventListener(event, () => {
+  const app = document.getElementById("appPage");
+
+  if (app && !app.classList.contains("hidden")) {
    resetInactivity();
   }
  });
 });
 
-/* NAVIGATION */
-function openTab(tab,button){
- ["dashboard","employees","attendance","payroll"].forEach(t=>{
-  document.getElementById(t+"Tab").classList.add("hidden");
+/* ==================================
+   NAVIGATION
+================================== */
+
+function openTab(tab, button) {
+ [
+  "dashboard",
+  "employees",
+  "attendance",
+  "payroll"
+ ].forEach(name => {
+  document.getElementById(name + "Tab").classList.add("hidden");
  });
 
- document.getElementById(tab+"Tab").classList.remove("hidden");
+ document.getElementById(tab + "Tab").classList.remove("hidden");
 
- document.querySelectorAll("nav button").forEach(b=>{
-  b.classList.remove("active");
+ document.querySelectorAll("nav button").forEach(btn => {
+  btn.classList.remove("active");
  });
 
  button.classList.add("active");
 }
 
-/* LOAD DATA */
-async function loadAll(){
+/* ==================================
+   LOAD ALL DATABASE RECORDS
+================================== */
+
+async function loadAll() {
  await loadEmployees();
  await loadAttendance();
  await loadPayroll();
  updateStats();
 }
 
-/* EMPLOYEES */
-async function loadEmployees(){
- const {data,error}=await db.from("ems_employees")
-  .select("*").order("created_at",{ascending:false});
+/* ==================================
+   EMPLOYEE MANAGEMENT
+================================== */
 
- if(error){
-  console.error(error);
-  showMessage("empMsg",error.message,"error");
-  return;
+async function loadEmployees() {
+ const { data, error } = await db
+  .from("ems_employees")
+  .select("*")
+  .order("created_at", { ascending: false });
+
+ if (error) {
+  showMessage("empMsg", error.message, "error");
+  throw error;
  }
 
- employees=data||[];
+ employees = data || [];
+
  renderEmployees();
  fillEmployeeSelects();
  updateStats();
 }
 
-function esc(v){
- return String(v??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
- }[c]));
-}
+function renderEmployees() {
+ const search =
+  document.getElementById("empSearch").value.toLowerCase();
 
-function renderEmployees(){
- const q=document.getElementById("empSearch").value.toLowerCase();
-
- const rows=employees.filter(e=>
-  (e.name||"").toLowerCase().includes(q)||
-  (e.phone||"").includes(q)
+ const rows = employees.filter(employee =>
+  (employee.name || "").toLowerCase().includes(search) ||
+  (employee.phone || "").includes(search)
  );
 
- document.getElementById("employeeRows").innerHTML=rows.map(e=>`
-  <tr>
-   <td>${esc(e.name)}</td>
-   <td>${esc(e.phone)}</td>
-   <td>${esc(e.department)}</td>
-   <td>${esc(e.salary)}</td>
-   <td>
-    <button class="secondary" onclick="editEmployee('${e.id}')">Edit</button>
-    <button class="danger" onclick="deleteEmployee('${e.id}')">Delete</button>
-   </td>
-  </tr>
- `).join("");
+ document.getElementById("employeeRows").innerHTML =
+  rows.map(employee => `
+   <tr>
+    <td>${esc(employee.name)}</td>
+    <td>${esc(employee.phone)}</td>
+    <td>${esc(employee.department)}</td>
+    <td>${esc(employee.salary)}</td>
+    <td>
+     <button class="secondary"
+      onclick="editEmployee('${esc(employee.id)}')">Edit</button>
+
+     <button class="danger"
+      onclick="deleteEmployee('${esc(employee.id)}')">Delete</button>
+    </td>
+   </tr>
+  `).join("");
 }
 
-async function saveEmployee(){
- const id=document.getElementById("empId").value;
+async function saveEmployee() {
+ const id = document.getElementById("empId").value;
 
- const row={
-  name:document.getElementById("empName").value.trim(),
-  phone:document.getElementById("empPhone").value.trim(),
-  email:document.getElementById("empEmail").value.trim(),
-  department:document.getElementById("empDepartment").value.trim(),
-  designation:document.getElementById("empDesignation").value.trim(),
-  salary:Number(document.getElementById("empSalary").value)||0
+ const row = {
+  name: document.getElementById("empName").value.trim(),
+  phone: document.getElementById("empPhone").value.trim(),
+  email: document.getElementById("empEmail").value.trim(),
+  department: document.getElementById("empDepartment").value.trim(),
+  designation: document.getElementById("empDesignation").value.trim(),
+  salary: Number(document.getElementById("empSalary").value) || 0
  };
 
- if(!row.name){
-  return showMessage("empMsg","Employee name is required.","error");
+ if (!row.name) {
+  return showMessage("empMsg", "Employee name is required.", "error");
  }
 
- const result=id
-  ?await db.from("ems_employees").update(row).eq("id",id)
-  :await db.from("ems_employees").insert(row);
+ try {
+  const result = id
+   ? await db.from("ems_employees").update(row).eq("id", id)
+   : await db.from("ems_employees").insert(row);
 
- if(result.error){
-  return showMessage("empMsg",result.error.message,"error");
+  if (result.error) throw result.error;
+
+  clearEmployee();
+  await loadEmployees();
+
+  showMessage("empMsg", "Employee saved successfully.");
+
+ } catch (error) {
+  showMessage("empMsg", error.message, "error");
  }
-
- clearEmployee();
- await loadEmployees();
- showMessage("empMsg","Employee saved successfully.");
 }
 
-function editEmployee(id){
- const e=employees.find(x=>x.id===id);
- if(!e)return;
+function editEmployee(id) {
+ const employee = employees.find(item => String(item.id) === String(id));
 
- document.getElementById("empId").value=e.id;
- document.getElementById("empName").value=e.name||"";
- document.getElementById("empPhone").value=e.phone||"";
- document.getElementById("empEmail").value=e.email||"";
- document.getElementById("empDepartment").value=e.department||"";
- document.getElementById("empDesignation").value=e.designation||"";
- document.getElementById("empSalary").value=e.salary||0;
+ if (!employee) return;
 
- window.scrollTo({top:0,behavior:"smooth"});
+ document.getElementById("empId").value = employee.id;
+ document.getElementById("empName").value = employee.name || "";
+ document.getElementById("empPhone").value = employee.phone || "";
+ document.getElementById("empEmail").value = employee.email || "";
+ document.getElementById("empDepartment").value = employee.department || "";
+ document.getElementById("empDesignation").value = employee.designation || "";
+ document.getElementById("empSalary").value = employee.salary || 0;
+
+ window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function clearEmployee(){
- ["empId","empName","empPhone","empEmail","empDepartment","empDesignation","empSalary"]
- .forEach(id=>document.getElementById(id).value="");
-}
-
-async function deleteEmployee(id){
- if(!confirm("Delete this employee?"))return;
-
- const {error}=await db.from("ems_employees").delete().eq("id",id);
-
- if(error){
-  return showMessage("empMsg",error.message,"error");
- }
-
- await loadEmployees();
-}
-
-/* EMPLOYEE DROPDOWNS */
-function fillEmployeeSelects(){
- ["attendanceEmployee","payrollEmployee"].forEach(id=>{
-  document.getElementById(id).innerHTML=employees.map(e=>
-   `<option value="${esc(e.id)}">${esc(e.name)}</option>`
-  ).join("");
+function clearEmployee() {
+ [
+  "empId",
+  "empName",
+  "empPhone",
+  "empEmail",
+  "empDepartment",
+  "empDesignation",
+  "empSalary"
+ ].forEach(id => {
+  document.getElementById(id).value = "";
  });
 }
 
-/* ATTENDANCE */
-async function loadAttendance(){
- const {data,error}=await db.from("ems_attendance")
-  .select("*").order("date",{ascending:false});
+async function deleteEmployee(id) {
+ if (!confirm("Delete this employee?")) return;
 
- if(error){
-  console.error(error);
-  showMessage("attendanceMsg",error.message,"error");
-  return;
+ try {
+  const { error } = await db
+   .from("ems_employees")
+   .delete()
+   .eq("id", id);
+
+  if (error) throw error;
+
+  await loadEmployees();
+
+  showMessage("empMsg", "Employee deleted successfully.");
+
+ } catch (error) {
+  showMessage("empMsg", error.message, "error");
+ }
+}
+
+/* ==================================
+   EMPLOYEE DROPDOWNS
+================================== */
+
+function fillEmployeeSelects() {
+ ["attendanceEmployee", "payrollEmployee"].forEach(id => {
+  document.getElementById(id).innerHTML =
+   employees.map(employee => `
+    <option value="${esc(employee.id)}">
+     ${esc(employee.name)}
+    </option>
+   `).join("");
+ });
+}
+
+/* ==================================
+   ATTENDANCE MANAGEMENT
+================================== */
+
+async function loadAttendance() {
+ const { data, error } = await db
+  .from("ems_attendance")
+  .select("*")
+  .order("date", { ascending: false });
+
+ if (error) {
+  showMessage("attendanceMsg", error.message, "error");
+  throw error;
  }
 
- attendance=data||[];
+ attendance = data || [];
 
- document.getElementById("attendanceRows").innerHTML=attendance.map(a=>{
-  const e=employees.find(x=>x.id===a.employee_id);
+ document.getElementById("attendanceRows").innerHTML =
+  attendance.map(record => {
+   const employee = employees.find(
+    item => String(item.id) === String(record.employee_id)
+   );
 
-  return `
-   <tr>
-    <td>${esc(a.date)}</td>
-    <td>${esc(e?.name||a.employee_id)}</td>
-    <td>${esc(a.status)}</td>
-   </tr>
-  `;
- }).join("");
+   return `
+    <tr>
+     <td>${esc(record.date)}</td>
+     <td>${esc(employee?.name || record.employee_id)}</td>
+     <td>${esc(record.status)}</td>
+    </tr>
+   `;
+  }).join("");
 
  updateStats();
 }
 
-async function saveAttendance(){
- const employee_id=document.getElementById("attendanceEmployee").value;
- const date=document.getElementById("attendanceDate").value;
- const status=document.getElementById("attendanceStatus").value;
+async function saveAttendance() {
+ const employee_id =
+  document.getElementById("attendanceEmployee").value;
 
- if(!employee_id||!date){
-  return showMessage("attendanceMsg","Select employee and date.","error");
+ const date =
+  document.getElementById("attendanceDate").value;
+
+ const status =
+  document.getElementById("attendanceStatus").value;
+
+ if (!employee_id || !date) {
+  return showMessage(
+   "attendanceMsg",
+   "Select employee and date.",
+   "error"
+  );
  }
 
- const {error}=await db.from("ems_attendance").insert({
-  employee_id,date,status
- });
+ try {
+  const { error } = await db
+   .from("ems_attendance")
+   .insert({ employee_id, date, status });
 
- if(error){
-  return showMessage("attendanceMsg",error.message,"error");
+  if (error) throw error;
+
+  await loadAttendance();
+
+  showMessage("attendanceMsg", "Attendance saved successfully.");
+
+ } catch (error) {
+  showMessage("attendanceMsg", error.message, "error");
  }
-
- await loadAttendance();
- showMessage("attendanceMsg","Attendance saved.");
 }
 
-/* PAYROLL */
-async function loadPayroll(){
- const {data,error}=await db.from("ems_payroll")
-  .select("*").order("created_at",{ascending:false});
+/* ==================================
+   PAYROLL MANAGEMENT
+================================== */
 
- if(error){
-  console.error(error);
-  showMessage("payrollMsg",error.message,"error");
-  return;
+async function loadPayroll() {
+ const { data, error } = await db
+  .from("ems_payroll")
+  .select("*")
+  .order("created_at", { ascending: false });
+
+ if (error) {
+  showMessage("payrollMsg", error.message, "error");
+  throw error;
  }
 
- payroll=data||[];
+ payroll = data || [];
 
- document.getElementById("payrollRows").innerHTML=payroll.map(p=>{
-  const e=employees.find(x=>x.id===p.employee_id);
+ document.getElementById("payrollRows").innerHTML =
+  payroll.map(record => {
+   const employee = employees.find(
+    item => String(item.id) === String(record.employee_id)
+   );
 
-  return `
-   <tr>
-    <td>${esc(e?.name||p.employee_id)}</td>
-    <td>${esc(p.month)}</td>
-    <td>₹${esc(p.amount)}</td>
-   </tr>
-  `;
- }).join("");
+   return `
+    <tr>
+     <td>${esc(employee?.name || record.employee_id)}</td>
+     <td>${esc(record.month)}</td>
+     <td>₹${esc(record.amount)}</td>
+    </tr>
+   `;
+  }).join("");
 
  updateStats();
 }
 
-async function savePayroll(){
- const employee_id=document.getElementById("payrollEmployee").value;
- const month=document.getElementById("payrollMonth").value;
- const amount=Number(document.getElementById("payrollAmount").value);
+async function savePayroll() {
+ const employee_id =
+  document.getElementById("payrollEmployee").value;
 
- if(!employee_id||!month||!amount){
-  return showMessage("payrollMsg","Complete all fields.","error");
+ const month =
+  document.getElementById("payrollMonth").value;
+
+ const amount =
+  Number(document.getElementById("payrollAmount").value);
+
+ if (!employee_id || !month || amount <= 0) {
+  return showMessage(
+   "payrollMsg",
+   "Complete all fields with a valid amount.",
+   "error"
+  );
  }
 
- const {error}=await db.from("ems_payroll").insert({
-  employee_id,month,amount
+ try {
+  const { error } = await db
+   .from("ems_payroll")
+   .insert({ employee_id, month, amount });
+
+  if (error) throw error;
+
+  await loadPayroll();
+
+  showMessage("payrollMsg", "Payroll saved successfully.");
+
+ } catch (error) {
+  showMessage("payrollMsg", error.message, "error");
+ }
+}
+
+/* ==================================
+   DASHBOARD STATISTICS
+================================== */
+
+function updateStats() {
+ document.getElementById("totalEmployees").textContent =
+  employees.length;
+
+ const today = new Date().toLocaleDateString("en-CA");
+
+ document.getElementById("presentCount").textContent =
+  attendance.filter(record =>
+   record.date === today &&
+   record.status === "Present"
+  ).length;
+
+ document.getElementById("payrollCount").textContent =
+  payroll.length;
+}
+
+/* ==================================
+   DEFAULT DATES
+================================== */
+
+function setDefaultDates() {
+ const today = new Date();
+
+ const localDate =
+  today.getFullYear() + "-" +
+  String(today.getMonth() + 1).padStart(2, "0") + "-" +
+  String(today.getDate()).padStart(2, "0");
+
+ document.getElementById("attendanceDate").value = localDate;
+
+ document.getElementById("payrollMonth").value =
+  localDate.slice(0, 7);
+}
+
+/* ==================================
+   PASSWORD RECOVERY EVENT
+================================== */
+
+if (db) {
+ db.auth.onAuthStateChange((event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+   showUpdate();
+  }
  });
-
- if(error){
-  return showMessage("payrollMsg",error.message,"error");
- }
-
- await loadPayroll();
- showMessage("payrollMsg","Payroll saved.");
 }
 
-/* DASHBOARD */
-function updateStats(){
- document.getElementById("totalEmployees").textContent=employees.length;
+/* ==================================
+   RESTORE EXISTING SESSION
+================================== */
 
- const today=new Date().toLocaleDateString("en-CA");
+async function restoreSession() {
+ try {
+  requireDatabase();
 
- document.getElementById("presentCount").textContent=
-  attendance.filter(a=>a.date===today&&a.status==="Present").length;
+  const { data, error } = await db.auth.getSession();
 
- document.getElementById("payrollCount").textContent=payroll.length;
-}
+  if (error) throw error;
 
-/* DEFAULT DATES */
-document.getElementById("attendanceDate").value=
- new Date().toLocaleDateString("en-CA");
+  const session = data.session;
 
-document.getElementById("payrollMonth").value=
- new Date().toISOString().slice(0,7);
-
-/* PASSWORD RECOVERY EVENT */
-db.auth.onAuthStateChange((event,session)=>{
- if(event==="PASSWORD_RECOVERY"){
-  showUpdate();
- }
-});
-
-/* RESTORE SESSION */
-(async()=>{
- try{
-  const {data:{session},error}=await db.auth.getSession();
-
-  if(error||!session)return;
-
-  if(session.user.id!==ADMIN_UUID){
-   await db.auth.signOut();
-   return showLogin();
+  if (!session) {
+   showLogin();
+   return;
   }
 
-  const {data:allowed,error:rpcError}=await db.rpc("is_ems_admin");
-
-  if(rpcError||allowed!==true){
+  if (session.user.id !== ADMIN_UUID) {
    await db.auth.signOut();
-   return showLogin();
+   showLogin();
+   return;
+  }
+
+  const { data: allowed, error: rpcError } =
+   await db.rpc("is_ems_admin");
+
+  if (rpcError || allowed !== true) {
+   await db.auth.signOut();
+   showLogin();
+   return;
   }
 
   await enterApp(session.user);
 
- }catch(err){
-  console.error("Session restore error:",err);
+ } catch (error) {
+  console.error("Session restore error:", error);
+
   showLogin();
- 
+
+  showMessage(
+   "loginMsg",
+   "Session error: " + error.message,
+   "error"
+  );
+ }
+
+/* END RESTORE SESSION */
+}
+
+setDefaultDates();
+restoreSession();
+
+</script>
+</body>
+</html>
