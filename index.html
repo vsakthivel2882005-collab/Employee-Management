@@ -5,10 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080808">
-<title>EMS 2.0 | HR Management</title>
+<title>EMS 2.0 | Premium HR Management</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--gold:#d6ad55;--bg:#080808;--panel:#151515;--text:#f5f5f5;--muted:#aaa;--red:#ef4444}
+:root{--gold:#d6ad55;--bg:#080808;--panel:#151515;--text:#f5f5f5;--muted:#aaa}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input,select{font:inherit}
@@ -25,7 +25,7 @@ button.secondary{background:#292929;color:white;border:1px solid #555}
 button.danger{background:#7f1d1d;color:white}
 button:disabled{opacity:.5}
 .login{max-width:420px;margin:65px auto}
-.message{padding:12px;margin:12px 0;border-radius:7px;background:#252525;display:none;overflow-wrap:anywhere}
+.message{padding:12px;margin:12px 0;border-radius:7px;background:#252525;display:none;overflow-wrap:anywhere;line-height:1.5}
 .success{border:1px solid #228b55;color:#8ee5b2}
 .error{border:1px solid #a33;color:#ffaaaa}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
@@ -41,10 +41,16 @@ th{color:var(--gold)}
 .small{color:var(--muted);font-size:13px}
 a{color:var(--gold)}
 footer{text-align:center;color:#777;padding:25px}
-@media(max-width:600px){header{padding:14px}.container{margin:18px auto}.card{padding:16px}.login{margin:35px 15px}}
+@media(max-width:600px){
+ header{padding:14px}
+ .container{margin:18px auto}
+ .card{padding:16px}
+ .login{margin:35px 15px}
+}
 </style>
 </head>
 <body>
+
 <header>
  <div class="logo">EMS <span style="color:white">2.0</span></div>
  <div id="headerUser" class="small"></div>
@@ -71,7 +77,7 @@ footer{text-align:center;color:#777;padding:25px}
 <section id="forgotPage" class="container login hidden">
  <div class="card">
   <h2>Reset Password</h2>
-  <p class="small">Enter your registered admin email. We will send a reset link.</p>
+  <p class="small">Enter your registered admin email.</p>
   <div id="forgotMsg" class="message"></div>
   <input id="forgotEmail" type="email" placeholder="Admin email">
   <button id="resetBtn" style="width:100%" onclick="sendReset()">Send Reset Link</button>
@@ -79,10 +85,11 @@ footer{text-align:center;color:#777;padding:25px}
  </div>
 </section>
 
-<!-- SET NEW PASSWORD -->
+<!-- UPDATE PASSWORD -->
 <section id="updatePage" class="container login hidden">
  <div class="card">
   <h2>Create New Password</h2>
+  <p class="small">Enter your new password below.</p>
   <div id="updateMsg" class="message"></div>
   <input id="newPassword" type="password" placeholder="New password (minimum 8 characters)">
   <input id="confirmPassword" type="password" placeholder="Confirm new password">
@@ -90,7 +97,7 @@ footer{text-align:center;color:#777;padding:25px}
  </div>
 </section>
 
-<!-- APP -->
+<!-- MAIN APP -->
 <main id="appPage" class="container hidden">
  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
   <h2>HR Dashboard</h2>
@@ -120,22 +127,31 @@ footer{text-align:center;color:#777;padding:25px}
   <div class="card">
    <h3>Add / Edit Employee</h3>
    <input id="empId" type="hidden">
-   <label>Employee Name</label><input id="empName" placeholder="Employee name">
-   <label>Mobile Number</label><input id="empPhone" placeholder="Mobile number">
-   <label>Email</label><input id="empEmail" type="email" placeholder="Email">
-   <label>Department</label><input id="empDepartment" placeholder="Department">
-   <label>Designation</label><input id="empDesignation" placeholder="Designation">
-   <label>Monthly Salary</label><input id="empSalary" type="number" placeholder="Salary">
+   <label>Employee Name</label>
+   <input id="empName" placeholder="Employee name">
+   <label>Mobile Number</label>
+   <input id="empPhone" placeholder="Mobile number">
+   <label>Email</label>
+   <input id="empEmail" type="email" placeholder="Email">
+   <label>Department</label>
+   <input id="empDepartment" placeholder="Department">
+   <label>Designation</label>
+   <input id="empDesignation" placeholder="Designation">
+   <label>Monthly Salary</label>
+   <input id="empSalary" type="number" placeholder="Salary">
    <button onclick="saveEmployee()">Save Employee</button>
    <button class="secondary" onclick="clearEmployee()">Clear</button>
    <div id="empMsg" class="message"></div>
   </div>
+
   <div class="card">
    <h3>Employee List</h3>
    <input id="empSearch" placeholder="Search employees..." oninput="renderEmployees()">
    <div class="table-wrap">
-    <table><thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Salary</th><th>Actions</th></tr></thead>
-    <tbody id="employeeRows"></tbody></table>
+    <table>
+     <thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Salary</th><th>Actions</th></tr></thead>
+     <tbody id="employeeRows"></tbody>
+    </table>
    </div>
   </div>
  </section>
@@ -143,34 +159,54 @@ footer{text-align:center;color:#777;padding:25px}
  <section id="attendanceTab" class="hidden">
   <div class="card">
    <h3>Mark Attendance</h3>
-   <label>Employee</label><select id="attendanceEmployee"></select>
-   <label>Date</label><input type="date" id="attendanceDate">
+   <label>Employee</label>
+   <select id="attendanceEmployee"></select>
+   <label>Date</label>
+   <input type="date" id="attendanceDate">
    <label>Status</label>
-   <select id="attendanceStatus"><option>Present</option><option>Absent</option><option>Leave</option></select>
+   <select id="attendanceStatus">
+    <option>Present</option>
+    <option>Absent</option>
+    <option>Leave</option>
+   </select>
    <button onclick="saveAttendance()">Save Attendance</button>
    <div id="attendanceMsg" class="message"></div>
   </div>
   <div class="card">
    <h3>Attendance Records</h3>
-   <div class="table-wrap"><table><thead><tr><th>Date</th><th>Employee</th><th>Status</th></tr></thead><tbody id="attendanceRows"></tbody></table></div>
+   <div class="table-wrap">
+    <table>
+     <thead><tr><th>Date</th><th>Employee</th><th>Status</th></tr></thead>
+     <tbody id="attendanceRows"></tbody>
+    </table>
+   </div>
   </div>
  </section>
 
  <section id="payrollTab" class="hidden">
   <div class="card">
    <h3>Add Payroll Record</h3>
-   <label>Employee</label><select id="payrollEmployee"></select>
-   <label>Month</label><input type="month" id="payrollMonth">
-   <label>Amount</label><input type="number" id="payrollAmount" placeholder="Salary amount">
+   <label>Employee</label>
+   <select id="payrollEmployee"></select>
+   <label>Month</label>
+   <input type="month" id="payrollMonth">
+   <label>Amount</label>
+   <input type="number" id="payrollAmount" placeholder="Salary amount">
    <button onclick="savePayroll()">Save Payroll</button>
    <div id="payrollMsg" class="message"></div>
   </div>
   <div class="card">
    <h3>Payroll History</h3>
-   <div class="table-wrap"><table><thead><tr><th>Employee</th><th>Month</th><th>Amount</th></tr></thead><tbody id="payrollRows"></tbody></table></div>
+   <div class="table-wrap">
+    <table>
+     <thead><tr><th>Employee</th><th>Month</th><th>Amount</th></tr></thead>
+     <tbody id="payrollRows"></tbody>
+    </table>
+   </div>
   </div>
  </section>
 </main>
+
 <footer>EMS 2.0 | Secure HR Management</footer>
 
 <script>
@@ -186,74 +222,178 @@ let attendance = [];
 let payroll = [];
 let inactivityTimer;
 
+/* MESSAGE */
 function showMessage(id,text,type="success"){
  const el=document.getElementById(id);
  el.textContent=text;
  el.className="message "+type;
  el.style.display="block";
 }
+
 function hidePages(){
- ["loginPage","forgotPage","updatePage","appPage"].forEach(id=>
- document.getElementById(id).classList.add("hidden"));
+ ["loginPage","forgotPage","updatePage","appPage"].forEach(id=>{
+  document.getElementById(id).classList.add("hidden");
+ });
 }
-function showLogin(){hidePages();document.getElementById("loginPage").classList.remove("hidden")}
+
+function showLogin(){
+ hidePages();
+ document.getElementById("loginPage").classList.remove("hidden");
+}
+
 function showForgot(){
  hidePages();
  document.getElementById("forgotPage").classList.remove("hidden");
- document.getElementById("forgotEmail").value=document.getElementById("email").value;
+ document.getElementById("forgotEmail").value=
+  document.getElementById("email").value.trim();
 }
-function showUpdate(){hidePages();document.getElementById("updatePage").classList.remove("hidden")}
 
+function showUpdate(){
+ hidePages();
+ document.getElementById("updatePage").classList.remove("hidden");
+}
+
+/* UPDATED ADMIN LOGIN WITH UUID DIAGNOSTICS */
 async function login(){
  const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
- if(!email||!password)return showMessage("loginMsg","Enter email and password.","error");
+
+ if(!email||!password){
+  return showMessage("loginMsg","Enter email and password.","error");
+ }
+
  const btn=document.getElementById("loginBtn");
- btn.disabled=true;btn.textContent="Checking...";
- const {data,error}=await db.auth.signInWithPassword({email,password});
- btn.disabled=false;btn.textContent="Secure Login";
- if(error)return showMessage("loginMsg",error.message,"error");
- const user=data.user;
- if(!user || user.id!==ADMIN_UUID){
-  await db.auth.signOut();
-  return showMessage("loginMsg","Admin UUID mismatch. Check ADMIN_UUID.","error");
+ btn.disabled=true;
+ btn.textContent="Checking...";
+
+ try{
+  const {data,error}=await db.auth.signInWithPassword({
+   email:email,
+   password:password
+  });
+
+  if(error){
+   return showMessage("loginMsg",error.message,"error");
+  }
+
+  const user=data.user;
+
+  if(!user){
+   await db.auth.signOut();
+   return showMessage("loginMsg","Supabase user not found.","error");
+  }
+
+  if(user.id!==ADMIN_UUID){
+   const actualId=user.id;
+   await db.auth.signOut();
+
+   return showMessage(
+    "loginMsg",
+    "UUID MISMATCH. Actual Supabase ID: "+actualId+
+    " | Configured Admin ID: "+ADMIN_UUID,
+    "error"
+   );
+  }
+
+  const {data:allowed,error:rpcError}=await db.rpc("is_ems_admin");
+
+  if(rpcError){
+   await db.auth.signOut();
+   return showMessage(
+    "loginMsg",
+    "Admin RPC Error: "+rpcError.message,
+    "error"
+   );
+  }
+
+  if(allowed!==true){
+   await db.auth.signOut();
+   return showMessage(
+    "loginMsg",
+    "UUID matched, but is_ems_admin returned false. Check ems_admins.user_id.",
+    "error"
+   );
+  }
+
+  await enterApp(user);
+
+ }catch(err){
+  showMessage("loginMsg","Unexpected error: "+err.message,"error");
+ }finally{
+  btn.disabled=false;
+  btn.textContent="Secure Login";
  }
- const {data:allowed,error:rpcError}=await db.rpc("is_ems_admin");
- if(rpcError){
-  await db.auth.signOut();
-  return showMessage("loginMsg","Admin verification error: "+rpcError.message,"error");
- }
- if(allowed!==true){
-  await db.auth.signOut();
-  return showMessage("loginMsg","This account is not registered as an EMS admin.","error");
- }
- await enterApp(user);
 }
 
+/* FORGOT PASSWORD */
 async function sendReset(){
  const email=document.getElementById("forgotEmail").value.trim();
- if(!email)return showMessage("forgotMsg","Enter your registered email.","error");
+
+ if(!email){
+  return showMessage("forgotMsg","Enter your registered email.","error");
+ }
+
  const btn=document.getElementById("resetBtn");
- btn.disabled=true;btn.textContent="Sending...";
- const {error}=await db.auth.resetPasswordForEmail(email,{
-  redirectTo:"https://vsakthivel2882005-collab.github.io/Employee-Management/"
- });
- btn.disabled=false;btn.textContent="Send Reset Link";
- if(error)return showMessage("forgotMsg",error.message,"error");
- showMessage("forgotMsg","If this email is registered, a password reset link has been sent. Check Inbox and Spam.","success");
+ btn.disabled=true;
+ btn.textContent="Sending...";
+
+ try{
+  const {error}=await db.auth.resetPasswordForEmail(email,{
+   redirectTo:"https://vsakthivel2882005-collab.github.io/Employee-Management/"
+  });
+
+  if(error){
+   return showMessage("forgotMsg",error.message,"error");
+  }
+
+  showMessage(
+   "forgotMsg",
+   "If this email is registered, a password reset link has been sent. Check Inbox and Spam.",
+   "success"
+  );
+
+ }catch(err){
+  showMessage("forgotMsg",err.message,"error");
+ }finally{
+  btn.disabled=false;
+  btn.textContent="Send Reset Link";
+ }
 }
 
+/* UPDATE PASSWORD */
 async function updatePassword(){
  const p=document.getElementById("newPassword").value;
  const c=document.getElementById("confirmPassword").value;
- if(p.length<8)return showMessage("updateMsg","Password must be at least 8 characters.","error");
- if(p!==c)return showMessage("updateMsg","Passwords do not match.","error");
+
+ if(p.length<8){
+  return showMessage("updateMsg","Password must be at least 8 characters.","error");
+ }
+
+ if(p!==c){
+  return showMessage("updateMsg","Passwords do not match.","error");
+ }
+
+ const {data:sessionData}=await db.auth.getSession();
+
+ if(!sessionData.session){
+  return showMessage("updateMsg","Reset session expired. Request a new reset link.","error");
+ }
+
  const {error}=await db.auth.updateUser({password:p});
- if(error)return showMessage("updateMsg",error.message,"error");
- showMessage("updateMsg","Password updated. You can now login.","success");
- setTimeout(async()=>{await db.auth.signOut();showLogin()},1800);
+
+ if(error){
+  return showMessage("updateMsg",error.message,"error");
+ }
+
+ showMessage("updateMsg","Password updated successfully. Please login again.","success");
+
+ setTimeout(async()=>{
+  await db.auth.signOut();
+  showLogin();
+ },1800);
 }
 
+/* ENTER APP */
 async function enterApp(user){
  hidePages();
  document.getElementById("appPage").classList.remove("hidden");
@@ -262,9 +402,11 @@ async function enterApp(user){
  resetInactivity();
 }
 
+/* LOGOUT */
 async function logout(){
  clearTimeout(inactivityTimer);
  await db.auth.signOut();
+ document.getElementById("headerUser").textContent="";
  showLogin();
 }
 
@@ -272,40 +414,90 @@ function resetInactivity(){
  clearTimeout(inactivityTimer);
  inactivityTimer=setTimeout(logout,20*60*1000);
 }
-["click","mousemove","keydown","touchstart"].forEach(event=>
- document.addEventListener(event,()=>{if(!document.getElementById("appPage").classList.contains("hidden"))resetInactivity()})
-);
 
+["click","mousemove","keydown","touchstart"].forEach(event=>{
+ document.addEventListener(event,()=>{
+  if(!document.getElementById("appPage").classList.contains("hidden")){
+   resetInactivity();
+  }
+ });
+});
+
+/* NAVIGATION */
 function openTab(tab,button){
- ["dashboard","employees","attendance","payroll"].forEach(t=>
- document.getElementById(t+"Tab").classList.add("hidden"));
+ ["dashboard","employees","attendance","payroll"].forEach(t=>{
+  document.getElementById(t+"Tab").classList.add("hidden");
+ });
+
  document.getElementById(tab+"Tab").classList.remove("hidden");
- document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+
+ document.querySelectorAll("nav button").forEach(b=>{
+  b.classList.remove("active");
+ });
+
  button.classList.add("active");
 }
 
+/* LOAD DATA */
 async function loadAll(){
- await Promise.all([loadEmployees(),loadAttendance(),loadPayroll()]);
+ await loadEmployees();
+ await loadAttendance();
+ await loadPayroll();
  updateStats();
 }
 
+/* EMPLOYEES */
 async function loadEmployees(){
- const {data,error}=await db.from("ems_employees").select("*").order("created_at",{ascending:false});
- if(error){console.error(error);return showMessage("empMsg",error.message,"error")}
+ const {data,error}=await db.from("ems_employees")
+  .select("*").order("created_at",{ascending:false});
+
+ if(error){
+  console.error(error);
+  showMessage("empMsg",error.message,"error");
+  return;
+ }
+
  employees=data||[];
- renderEmployees();fillEmployeeSelects();updateStats();
+ renderEmployees();
+ fillEmployeeSelects();
+ updateStats();
 }
+
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[c]));
+}
+
 function renderEmployees(){
  const q=document.getElementById("empSearch").value.toLowerCase();
- const rows=employees.filter(e=>(e.name||"").toLowerCase().includes(q)||(e.phone||"").includes(q));
+
+ const rows=employees.filter(e=>
+  (e.name||"").toLowerCase().includes(q)||
+  (e.phone||"").includes(q)
+ );
+
  document.getElementById("employeeRows").innerHTML=rows.map(e=>`
- <tr><td>${esc(e.name)}</td><td>${esc(e.phone)}</td><td>${esc(e.department)}</td><td>${esc(e.salary)}</td>
- <td><button class="secondary" onclick="editEmployee('${e.id}')">Edit</button>
- <button class="danger" onclick="deleteEmployee('${e.id}')">Delete</button></td></tr>`).join("");
+  <tr>
+   <td>${esc(e.name)}</td>
+   <td>${esc(e.phone)}</td>
+   <td>${esc(e.department)}</td>
+   <td>${esc(e.salary)}</td>
+   <td>
+    <button class="secondary" onclick="editEmployee('${e.id}')">Edit</button>
+    <button class="danger" onclick="deleteEmployee('${e.id}')">Delete</button>
+   </td>
+  </tr>
+ `).join("");
 }
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
 async function saveEmployee(){
  const id=document.getElementById("empId").value;
+
  const row={
   name:document.getElementById("empName").value.trim(),
   phone:document.getElementById("empPhone").value.trim(),
@@ -314,13 +506,28 @@ async function saveEmployee(){
   designation:document.getElementById("empDesignation").value.trim(),
   salary:Number(document.getElementById("empSalary").value)||0
  };
- if(!row.name)return showMessage("empMsg","Employee name is required.","error");
- const result=id?await db.from("ems_employees").update(row).eq("id",id):await db.from("ems_employees").insert(row);
- if(result.error)return showMessage("empMsg",result.error.message,"error");
- clearEmployee();await loadEmployees();showMessage("empMsg","Employee saved successfully.");
+
+ if(!row.name){
+  return showMessage("empMsg","Employee name is required.","error");
+ }
+
+ const result=id
+  ?await db.from("ems_employees").update(row).eq("id",id)
+  :await db.from("ems_employees").insert(row);
+
+ if(result.error){
+  return showMessage("empMsg",result.error.message,"error");
+ }
+
+ clearEmployee();
+ await loadEmployees();
+ showMessage("empMsg","Employee saved successfully.");
 }
+
 function editEmployee(id){
- const e=employees.find(x=>x.id===id);if(!e)return;
+ const e=employees.find(x=>x.id===id);
+ if(!e)return;
+
  document.getElementById("empId").value=e.id;
  document.getElementById("empName").value=e.name||"";
  document.getElementById("empPhone").value=e.phone||"";
@@ -328,92 +535,182 @@ function editEmployee(id){
  document.getElementById("empDepartment").value=e.department||"";
  document.getElementById("empDesignation").value=e.designation||"";
  document.getElementById("empSalary").value=e.salary||0;
+
  window.scrollTo({top:0,behavior:"smooth"});
 }
+
 function clearEmployee(){
- ["empId","empName","empPhone","empEmail","empDepartment","empDesignation","empSalary"].forEach(id=>document.getElementById(id).value="");
+ ["empId","empName","empPhone","empEmail","empDepartment","empDesignation","empSalary"]
+ .forEach(id=>document.getElementById(id).value="");
 }
+
 async function deleteEmployee(id){
  if(!confirm("Delete this employee?"))return;
+
  const {error}=await db.from("ems_employees").delete().eq("id",id);
- if(error)return showMessage("empMsg",error.message,"error");
+
+ if(error){
+  return showMessage("empMsg",error.message,"error");
+ }
+
  await loadEmployees();
 }
 
+/* EMPLOYEE DROPDOWNS */
 function fillEmployeeSelects(){
  ["attendanceEmployee","payrollEmployee"].forEach(id=>{
   document.getElementById(id).innerHTML=employees.map(e=>
-   `<option value="${esc(e.id)}">${esc(e.name)}</option>`).join("");
+   `<option value="${esc(e.id)}">${esc(e.name)}</option>`
+  ).join("");
  });
 }
 
+/* ATTENDANCE */
 async function loadAttendance(){
- const {data,error}=await db.from("ems_attendance").select("*").order("date",{ascending:false});
- if(error){console.error(error);return}
+ const {data,error}=await db.from("ems_attendance")
+  .select("*").order("date",{ascending:false});
+
+ if(error){
+  console.error(error);
+  showMessage("attendanceMsg",error.message,"error");
+  return;
+ }
+
  attendance=data||[];
+
  document.getElementById("attendanceRows").innerHTML=attendance.map(a=>{
   const e=employees.find(x=>x.id===a.employee_id);
-  return `<tr><td>${esc(a.date)}</td><td>${esc(e?.name||a.employee_id)}</td><td>${esc(a.status)}</td></tr>`;
+
+  return `
+   <tr>
+    <td>${esc(a.date)}</td>
+    <td>${esc(e?.name||a.employee_id)}</td>
+    <td>${esc(a.status)}</td>
+   </tr>
+  `;
  }).join("");
+
  updateStats();
 }
+
 async function saveAttendance(){
  const employee_id=document.getElementById("attendanceEmployee").value;
  const date=document.getElementById("attendanceDate").value;
  const status=document.getElementById("attendanceStatus").value;
- if(!employee_id||!date)return showMessage("attendanceMsg","Select employee and date.","error");
- const {error}=await db.from("ems_attendance").insert({employee_id,date,status});
- if(error)return showMessage("attendanceMsg",error.message,"error");
- await loadAttendance();showMessage("attendanceMsg","Attendance saved.");
+
+ if(!employee_id||!date){
+  return showMessage("attendanceMsg","Select employee and date.","error");
+ }
+
+ const {error}=await db.from("ems_attendance").insert({
+  employee_id,date,status
+ });
+
+ if(error){
+  return showMessage("attendanceMsg",error.message,"error");
+ }
+
+ await loadAttendance();
+ showMessage("attendanceMsg","Attendance saved.");
 }
 
+/* PAYROLL */
 async function loadPayroll(){
- const {data,error}=await db.from("ems_payroll").select("*").order("created_at",{ascending:false});
- if(error){console.error(error);return}
+ const {data,error}=await db.from("ems_payroll")
+  .select("*").order("created_at",{ascending:false});
+
+ if(error){
+  console.error(error);
+  showMessage("payrollMsg",error.message,"error");
+  return;
+ }
+
  payroll=data||[];
+
  document.getElementById("payrollRows").innerHTML=payroll.map(p=>{
   const e=employees.find(x=>x.id===p.employee_id);
-  return `<tr><td>${esc(e?.name||p.employee_id)}</td><td>${esc(p.month)}</td><td>₹${esc(p.amount)}</td></tr>`;
+
+  return `
+   <tr>
+    <td>${esc(e?.name||p.employee_id)}</td>
+    <td>${esc(p.month)}</td>
+    <td>₹${esc(p.amount)}</td>
+   </tr>
+  `;
  }).join("");
+
  updateStats();
 }
+
 async function savePayroll(){
  const employee_id=document.getElementById("payrollEmployee").value;
  const month=document.getElementById("payrollMonth").value;
  const amount=Number(document.getElementById("payrollAmount").value);
- if(!employee_id||!month||!amount)return showMessage("payrollMsg","Complete all fields.","error");
- const {error}=await db.from("ems_payroll").insert({employee_id,month,amount});
- if(error)return showMessage("payrollMsg",error.message,"error");
- await loadPayroll();showMessage("payrollMsg","Payroll saved.");
+
+ if(!employee_id||!month||!amount){
+  return showMessage("payrollMsg","Complete all fields.","error");
+ }
+
+ const {error}=await db.from("ems_payroll").insert({
+  employee_id,month,amount
+ });
+
+ if(error){
+  return showMessage("payrollMsg",error.message,"error");
+ }
+
+ await loadPayroll();
+ showMessage("payrollMsg","Payroll saved.");
 }
+
+/* DASHBOARD */
 function updateStats(){
  document.getElementById("totalEmployees").textContent=employees.length;
- const today=new Date().toISOString().slice(0,10);
- document.getElementById("presentCount").textContent=attendance.filter(a=>a.date===today&&a.status==="Present").length;
+
+ const today=new Date().toLocaleDateString("en-CA");
+
+ document.getElementById("presentCount").textContent=
+  attendance.filter(a=>a.date===today&&a.status==="Present").length;
+
  document.getElementById("payrollCount").textContent=payroll.length;
 }
 
-document.getElementById("attendanceDate").value=new Date().toISOString().slice(0,10);
-document.getElementById("payrollMonth").value=new Date().toISOString().slice(0,7);
+/* DEFAULT DATES */
+document.getElementById("attendanceDate").value=
+ new Date().toLocaleDateString("en-CA");
 
-/* Handle password recovery link */
+document.getElementById("payrollMonth").value=
+ new Date().toISOString().slice(0,7);
+
+/* PASSWORD RECOVERY EVENT */
 db.auth.onAuthStateChange((event,session)=>{
  if(event==="PASSWORD_RECOVERY"){
   showUpdate();
  }
 });
 
-/* Restore existing session */
+/* RESTORE SESSION */
 (async()=>{
- const {data:{session}}=await db.auth.getSession();
- if(session){
-  if(session.user.id===ADMIN_UUID){
-   const {data:allowed,error}=await db.rpc("is_ems_admin");
-   if(!error&&allowed===true)await enterApp(session.user);
-   else await db.auth.signOut();
-  }else await db.auth.signOut();
- }
-})();
-</script>
-</body>
-</html>
+ try{
+  const {data:{session},error}=await db.auth.getSession();
+
+  if(error||!session)return;
+
+  if(session.user.id!==ADMIN_UUID){
+   await db.auth.signOut();
+   return showLogin();
+  }
+
+  const {data:allowed,error:rpcError}=await db.rpc("is_ems_admin");
+
+  if(rpcError||allowed!==true){
+   await db.auth.signOut();
+   return showLogin();
+  }
+
+  await enterApp(session.user);
+
+ }catch(err){
+  console.error("Session restore error:",err);
+  showLogin();
+ 
