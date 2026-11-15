@@ -3,239 +3,175 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090909">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
 <title>EMS 2.0 | HR Management</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-:root{--bg:#090909;--panel:#141414;--panel2:#1b1b1b;--gold:#d9ad52;--text:#f5f5f5;--muted:#999;--border:#292929;--green:#39c98a;--red:#ff6868}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
+:root{--gold:#d6ad55;--bg:#080808;--panel:#151515;--text:#f5f5f5;--muted:#aaa;--red:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
 .hidden{display:none!important}
-.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 50% 20%,#302410,#090909 55%)}
-.login-card{width:min(420px,100%);padding:32px;background:#141414;border:1px solid #4c3b1c;border-radius:18px}
-.logo{font-size:24px;font-weight:800;color:var(--gold);letter-spacing:2px}.sub{color:var(--muted);font-size:13px;margin:8px 0 25px}
-input,select,textarea{width:100%;padding:12px;background:#101010;border:1px solid var(--border);border-radius:9px;color:white;outline:none;margin:6px 0 13px}
-input:focus,select:focus,textarea:focus{border-color:var(--gold)}
-button{border:0;border-radius:9px;padding:11px 15px;font-weight:700}
-.primary{background:var(--gold);color:#17120a}.secondary{background:#292929;color:white}.danger{background:#522525;color:#ffdada}.small{padding:7px 10px;font-size:12px}
-.login-card button{width:100%}
-#app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:245px;background:#111;border-right:1px solid var(--border);padding:24px 15px;overflow:auto;z-index:5}
-.brand{padding:4px 10px 28px}.brand small{display:block;color:var(--muted);margin-top:7px}
-.nav-title{font-size:10px;color:#777;letter-spacing:1.5px;padding:15px 10px 8px}
-.nav button{display:block;width:100%;text-align:left;background:transparent;color:#aaa;margin:3px 0;padding:12px}
-.nav button.active,.nav button:hover{background:#292215;color:var(--gold)}
-.main{margin-left:245px;padding:28px;max-width:1600px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:25px}
-h1{font-size:25px;margin:0}h2{font-size:18px;margin:0 0 16px}
-.muted{color:var(--muted);font-size:13px}.gold{color:var(--gold)}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;min-width:0}
-.stat{font-size:28px;font-weight:800;margin:12px 0 4px}.stat-label{font-size:12px;color:var(--muted)}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:15px}
-.toolbar input{max-width:300px;margin:0}.toolbar button{white-space:nowrap}
-.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:700px}
-th,td{padding:13px 11px;border-bottom:1px solid var(--border);text-align:left;font-size:12px}
-th{color:var(--gold);font-weight:700;background:#191919}td{color:#ddd}
-.tag{padding:5px 8px;border-radius:20px;background:#28251e;color:var(--gold);font-size:11px}
-.actions{display:flex;gap:5px;flex-wrap:wrap}
-.section{display:none}.section.active{display:block}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.form-grid label{font-size:12px;color:var(--muted)}
-.modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:15px;z-index:20}
-.modal.show{display:grid}.modal-box{background:#171717;border:1px solid #4a3a1e;border-radius:15px;padding:22px;width:min(620px,100%);max-height:90vh;overflow:auto}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.notice{padding:12px;border-radius:9px;background:#262116;color:#e5c77f;font-size:12px;margin:12px 0}
-.photo{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#333}
-.mobile-menu{display:none}
-@media(max-width:900px){.sidebar{width:210px}.main{margin-left:210px;padding:20px}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.sidebar{display:none}.sidebar.open{display:block;width:250px;box-shadow:10px 0 40px #000}.main{margin:0;padding:16px}.mobile-menu{display:inline-block}.top{align-items:flex-start}.grid{gap:9px}.card{padding:13px}.stat{font-size:23px}.form-grid{grid-template-columns:1fr}}
+header{padding:17px 22px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:21px;font-weight:bold;color:var(--gold)}
+.container{max-width:1100px;margin:30px auto;padding:0 16px}
+.card{background:var(--panel);border:1px solid #333;border-radius:13px;padding:22px;margin-bottom:18px}
+h2,h3{color:var(--gold)}
+input,select{width:100%;padding:12px;margin:7px 0 14px;border-radius:7px;border:1px solid #444;background:#090909;color:white}
+button{border:0;border-radius:7px;padding:11px 16px;background:var(--gold);color:#111;font-weight:bold}
+button.secondary{background:#292929;color:white;border:1px solid #555}
+button.danger{background:#7f1d1d;color:white}
+button:disabled{opacity:.5}
+.login{max-width:420px;margin:65px auto}
+.message{padding:12px;margin:12px 0;border-radius:7px;background:#252525;display:none;overflow-wrap:anywhere}
+.success{border:1px solid #228b55;color:#8ee5b2}
+.error{border:1px solid #a33;color:#ffaaaa}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.stat{background:#202020;padding:18px;border-radius:10px}
+.stat strong{font-size:27px;color:var(--gold);display:block;margin-top:8px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+nav button{background:#222;color:white;border:1px solid #444}
+nav button.active{background:var(--gold);color:#111}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #333}
+th{color:var(--gold)}
+.table-wrap{overflow-x:auto}
+.small{color:var(--muted);font-size:13px}
+a{color:var(--gold)}
+footer{text-align:center;color:#777;padding:25px}
+@media(max-width:600px){header{padding:14px}.container{margin:18px auto}.card{padding:16px}.login{margin:35px 15px}}
 </style>
 </head>
 <body>
+<header>
+ <div class="logo">EMS <span style="color:white">2.0</span></div>
+ <div id="headerUser" class="small"></div>
+</header>
 
-<div id="login" class="login-wrap">
- <div class="login-card">
-  <div class="logo">EMS <span style="color:white">2.0</span></div>
-  <div class="sub">ADVANCED HR MANAGEMENT SYSTEM</div>
-  <form id="loginForm">
-   <label class="muted">Admin Email</label>
-   <input id="email" type="email" required placeholder="Admin email">
-   <label class="muted">Password</label>
-   <input id="password" type="password" required placeholder="Password">
-   <button class="primary" type="submit">SECURE LOGIN</button>
-  </form>
-  <button class="secondary" style="margin-top:10px" onclick="forgotPassword()">Forgot password?</button>
-  <p id="loginMsg" class="muted"></p>
+<!-- LOGIN -->
+<section id="loginPage" class="container login">
+ <div class="card">
+  <h2>Admin Login</h2>
+  <p class="small">Secure HR Management Portal</p>
+  <div id="loginMsg" class="message"></div>
+  <label>Admin Email</label>
+  <input id="email" type="email" placeholder="Enter admin email">
+  <label>Password</label>
+  <input id="password" type="password" placeholder="Enter password">
+  <button id="loginBtn" style="width:100%" onclick="login()">Secure Login</button>
+  <p style="text-align:center">
+   <a href="#" onclick="showForgot();return false">Forgot Password?</a>
+  </p>
  </div>
-</div>
+</section>
 
-<div id="app" class="hidden">
- <aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="logo">EMS <span style="color:white">2.0</span></div><small>HR MANAGEMENT</small></div>
-  <div class="nav">
-   <div class="nav-title">MAIN MENU</div>
-   <button class="active" data-page="dashboard">◈ Dashboard</button>
-   <button data-page="employees">♙ Employees</button>
-   <button data-page="departments">▦ Departments</button>
-   <div class="nav-title">HR OPERATIONS</div>
-   <button data-page="attendance">◷ Attendance</button>
-   <button data-page="leaves">▤ Leave Management</button>
-   <button data-page="payroll">₹ Payroll</button>
-   <button data-page="performance">★ Performance</button>
-   <div class="nav-title">SYSTEM</div>
-   <button data-page="backup">⇩ Backup & Export</button>
-  </div>
-  <button class="secondary" style="width:100%;margin-top:25px" onclick="logout()">Logout</button>
- </aside>
-
- <main class="main">
-  <div class="top">
-   <div style="display:flex;gap:10px;align-items:center">
-    <button class="secondary mobile-menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
-    <div><h1 id="pageTitle">Dashboard</h1><div class="muted">Employee Management System</div></div>
-   </div>
-   <div class="muted" id="today"></div>
-  </div>
-
-  <section id="dashboard" class="section active">
-   <div class="grid">
-    <div class="card"><div class="stat-label">TOTAL EMPLOYEES</div><div class="stat" id="totalEmp">0</div><div class="muted">All employee records</div></div>
-    <div class="card"><div class="stat-label">ACTIVE EMPLOYEES</div><div class="stat gold" id="activeEmp">0</div><div class="muted">Currently active</div></div>
-    <div class="card"><div class="stat-label">TODAY PRESENT</div><div class="stat" id="presentEmp">0</div><div class="muted">Attendance records</div></div>
-    <div class="card"><div class="stat-label">PENDING LEAVES</div><div class="stat" id="pendingLeaves">0</div><div class="muted">Awaiting approval</div></div>
-   </div>
-   <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-    <div class="card"><h2>Employee Overview</h2><canvas id="employeeChart"></canvas></div>
-    <div class="card"><h2>Attendance Overview</h2><canvas id="attendanceChart"></canvas></div>
-   </div>
-   <div class="card"><h2>Recent Employees</h2><div id="recentEmployees" class="muted">No records</div></div>
-  </section>
-
-  <section id="employees" class="section">
-   <div class="card">
-    <div class="toolbar"><input id="employeeSearch" placeholder="Search name, ID, phone..." oninput="renderEmployees()"><button class="primary" onclick="openEmployee()">+ Add Employee</button><button class="secondary" onclick="exportCSV('employees')">Export CSV</button></div>
-    <div class="table-wrap"><table><thead><tr><th>Employee</th><th>ID</th><th>Department</th><th>Designation</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead><tbody id="employeeRows"></tbody></table></div>
-   </div>
-  </section>
-
-  <section id="departments" class="section">
-   <div class="card">
-    <div class="toolbar"><button class="primary" onclick="addDepartment()">+ Add Department</button></div>
-    <div class="table-wrap"><table><thead><tr><th>Department</th><th>Created</th><th>Actions</th></tr></thead><tbody id="departmentRows"></tbody></table></div>
-   </div>
-  </section>
-
-  <section id="attendance" class="section">
-   <div class="card">
-    <h2>Attendance Entry</h2>
-    <div class="form-grid">
-     <label>Employee<select id="attEmployee"></select></label>
-     <label>Date<input id="attDate" type="date"></label>
-     <label>Status<select id="attStatus"><option>Present</option><option>Absent</option><option>Late</option><option>Half Day</option><option>Work From Home</option></select></label>
-     <label>Check In<input id="checkIn" type="time"></label>
-     <label>Check Out<input id="checkOut" type="time"></label>
-    </div>
-    <button class="primary" onclick="saveAttendance()">Save Attendance</button>
-   </div>
-   <div class="card" style="margin-top:15px">
-    <div class="toolbar"><h2 style="margin:0">Attendance Records</h2><button class="secondary" onclick="exportCSV('attendance')">Export CSV</button></div>
-    <div class="table-wrap"><table><thead><tr><th>Date</th><th>Employee</th><th>Status</th><th>Check In</th><th>Check Out</th></tr></thead><tbody id="attendanceRows"></tbody></table></div>
-   </div>
-  </section>
-
-  <section id="leaves" class="section">
-   <div class="card">
-    <h2>Apply Leave</h2>
-    <div class="form-grid">
-     <label>Employee<select id="leaveEmployee"></select></label>
-     <label>Leave Type<select id="leaveType"><option>Casual Leave</option><option>Sick Leave</option><option>Earned Leave</option><option>Other</option></select></label>
-     <label>Start Date<input id="leaveStart" type="date"></label>
-     <label>End Date<input id="leaveEnd" type="date"></label>
-    </div>
-    <label class="muted">Reason</label><textarea id="leaveReason" placeholder="Leave reason"></textarea>
-    <button class="primary" onclick="saveLeave()">Submit Leave</button>
-   </div>
-   <div class="card" style="margin-top:15px"><h2>Leave Requests</h2>
-    <div class="table-wrap"><table><thead><tr><th>Employee</th><th>Type</th><th>Period</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="leaveRows"></tbody></table></div>
-   </div>
-  </section>
-
-  <section id="payroll" class="section">
-   <div class="card">
-    <h2>Payroll Calculator</h2>
-    <div class="form-grid">
-     <label>Employee<select id="payEmployee"></select></label>
-     <label>Salary Month<input id="payMonth" type="month"></label>
-     <label>Basic Salary<input id="basic" type="number" min="0" value="0"></label>
-     <label>Allowance<input id="allowance" type="number" min="0" value="0"></label>
-     <label>Bonus<input id="bonus" type="number" min="0" value="0"></label>
-     <label>PF Deduction<input id="pf" type="number" min="0" value="0"></label>
-     <label>ESI Deduction<input id="esi" type="number" min="0" value="0"></label>
-     <label>Other Deduction<input id="otherDeduction" type="number" min="0" value="0"></label>
-    </div>
-    <div class="notice">Net Salary = Basic + Allowance + Bonus − PF − ESI − Other Deduction. Confirm applicable PF/ESI rules before processing salary.</div>
-    <h2>Net Salary: <span class="gold" id="netSalary">₹0.00</span></h2>
-    <button class="primary" onclick="savePayroll()">Save Payroll</button>
-   </div>
-   <div class="card" style="margin-top:15px"><h2>Salary History</h2>
-    <div class="table-wrap"><table><thead><tr><th>Employee</th><th>Month</th><th>Basic</th><th>Bonus</th><th>Net Salary</th><th>Payslip</th></tr></thead><tbody id="payrollRows"></tbody></table></div>
-   </div>
-  </section>
-
-  <section id="performance" class="section">
-   <div class="card">
-    <h2>Employee Performance Review</h2>
-    <div class="form-grid">
-     <label>Employee<select id="perfEmployee"></select></label>
-     <label>Review Date<input id="reviewDate" type="date"></label>
-     <label>Score (0–10)<input id="score" type="number" min="0" max="10" step=".1"></label>
-     <label>Reviewer<input id="reviewer" placeholder="Reviewer name"></label>
-    </div>
-    <label class="muted">Goals</label><textarea id="goals"></textarea>
-    <label class="muted">Comments</label><textarea id="comments"></textarea>
-    <button class="primary" onclick="savePerformance()">Save Review</button>
-   </div>
-   <div class="card" style="margin-top:15px"><h2>Performance Records</h2>
-    <div class="table-wrap"><table><thead><tr><th>Employee</th><th>Date</th><th>Score</th><th>Reviewer</th><th>Comments</th></tr></thead><tbody id="performanceRows"></tbody></table></div>
-   </div>
-  </section>
-
-  <section id="backup" class="section">
-   <div class="card">
-    <h2>Database Backup & Export</h2>
-    <p class="muted">Download a JSON backup of the records currently loaded from Supabase.</p>
-    <button class="primary" onclick="downloadBackup()">Download JSON Backup</button>
-    <div class="notice">This backup contains employee personal information. Store it securely and do not share it publicly.</div>
-    <h2 style="margin-top:25px">Restore Backup</h2>
-    <p class="muted">Restore is not enabled in this version to avoid accidental overwriting of live records. Use Supabase database backups for full recovery.</p>
-   </div>
-  </section>
- </main>
-</div>
-
-<div class="modal" id="employeeModal">
- <div class="modal-box">
-  <div class="modal-head"><h2 id="employeeModalTitle">Add Employee</h2><button class="secondary small" onclick="closeModal()">✕</button></div>
-  <input type="hidden" id="editEmployeeId">
-  <div class="form-grid">
-   <label>Employee ID<input id="empCode" required placeholder="EMP001"></label>
-   <label>Full Name<input id="empName" required placeholder="Employee name"></label>
-   <label>Email<input id="empEmail" type="email"></label>
-   <label>Phone<input id="empPhone"></label>
-   <label>Department<select id="empDepartment"></select></label>
-   <label>Designation<input id="empDesignation"></label>
-   <label>Basic Salary<input id="empSalary" type="number" min="0" value="0"></label>
-   <label>Joining Date<input id="empJoining" type="date"></label>
-   <label>Status<select id="empStatus"><option>Active</option><option>Inactive</option><option>Resigned</option></select></label>
-   <label>Resignation Date<input id="empResignation" type="date"></label>
-  </div>
-  <label class="muted">Employee Photo</label><input id="empPhoto" type="file" accept="image/*">
-  <button class="primary" style="width:100%" onclick="saveEmployee()">Save Employee</button>
+<!-- FORGOT PASSWORD -->
+<section id="forgotPage" class="container login hidden">
+ <div class="card">
+  <h2>Reset Password</h2>
+  <p class="small">Enter your registered admin email. We will send a reset link.</p>
+  <div id="forgotMsg" class="message"></div>
+  <input id="forgotEmail" type="email" placeholder="Admin email">
+  <button id="resetBtn" style="width:100%" onclick="sendReset()">Send Reset Link</button>
+  <p><a href="#" onclick="showLogin();return false">Back to Login</a></p>
  </div>
-</div>
+</section>
+
+<!-- SET NEW PASSWORD -->
+<section id="updatePage" class="container login hidden">
+ <div class="card">
+  <h2>Create New Password</h2>
+  <div id="updateMsg" class="message"></div>
+  <input id="newPassword" type="password" placeholder="New password (minimum 8 characters)">
+  <input id="confirmPassword" type="password" placeholder="Confirm new password">
+  <button style="width:100%" onclick="updatePassword()">Update Password</button>
+ </div>
+</section>
+
+<!-- APP -->
+<main id="appPage" class="container hidden">
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+  <h2>HR Dashboard</h2>
+  <button class="danger" onclick="logout()">Logout</button>
+ </div>
+
+ <nav>
+  <button class="active" onclick="openTab('dashboard',this)">Dashboard</button>
+  <button onclick="openTab('employees',this)">Employees</button>
+  <button onclick="openTab('attendance',this)">Attendance</button>
+  <button onclick="openTab('payroll',this)">Payroll</button>
+ </nav>
+
+ <section id="dashboardTab">
+  <div class="grid">
+   <div class="stat">Total Employees<strong id="totalEmployees">0</strong></div>
+   <div class="stat">Present Today<strong id="presentCount">0</strong></div>
+   <div class="stat">Payroll Records<strong id="payrollCount">0</strong></div>
+  </div>
+  <div class="card">
+   <h3>Welcome to EMS 2.0</h3>
+   <p>Manage employees, attendance and payroll from one place.</p>
+  </div>
+ </section>
+
+ <section id="employeesTab" class="hidden">
+  <div class="card">
+   <h3>Add / Edit Employee</h3>
+   <input id="empId" type="hidden">
+   <label>Employee Name</label><input id="empName" placeholder="Employee name">
+   <label>Mobile Number</label><input id="empPhone" placeholder="Mobile number">
+   <label>Email</label><input id="empEmail" type="email" placeholder="Email">
+   <label>Department</label><input id="empDepartment" placeholder="Department">
+   <label>Designation</label><input id="empDesignation" placeholder="Designation">
+   <label>Monthly Salary</label><input id="empSalary" type="number" placeholder="Salary">
+   <button onclick="saveEmployee()">Save Employee</button>
+   <button class="secondary" onclick="clearEmployee()">Clear</button>
+   <div id="empMsg" class="message"></div>
+  </div>
+  <div class="card">
+   <h3>Employee List</h3>
+   <input id="empSearch" placeholder="Search employees..." oninput="renderEmployees()">
+   <div class="table-wrap">
+    <table><thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Salary</th><th>Actions</th></tr></thead>
+    <tbody id="employeeRows"></tbody></table>
+   </div>
+  </div>
+ </section>
+
+ <section id="attendanceTab" class="hidden">
+  <div class="card">
+   <h3>Mark Attendance</h3>
+   <label>Employee</label><select id="attendanceEmployee"></select>
+   <label>Date</label><input type="date" id="attendanceDate">
+   <label>Status</label>
+   <select id="attendanceStatus"><option>Present</option><option>Absent</option><option>Leave</option></select>
+   <button onclick="saveAttendance()">Save Attendance</button>
+   <div id="attendanceMsg" class="message"></div>
+  </div>
+  <div class="card">
+   <h3>Attendance Records</h3>
+   <div class="table-wrap"><table><thead><tr><th>Date</th><th>Employee</th><th>Status</th></tr></thead><tbody id="attendanceRows"></tbody></table></div>
+  </div>
+ </section>
+
+ <section id="payrollTab" class="hidden">
+  <div class="card">
+   <h3>Add Payroll Record</h3>
+   <label>Employee</label><select id="payrollEmployee"></select>
+   <label>Month</label><input type="month" id="payrollMonth">
+   <label>Amount</label><input type="number" id="payrollAmount" placeholder="Salary amount">
+   <button onclick="savePayroll()">Save Payroll</button>
+   <div id="payrollMsg" class="message"></div>
+  </div>
+  <div class="card">
+   <h3>Payroll History</h3>
+   <div class="table-wrap"><table><thead><tr><th>Employee</th><th>Month</th><th>Amount</th></tr></thead><tbody id="payrollRows"></tbody></table></div>
+  </div>
+ </section>
+</main>
+<footer>EMS 2.0 | Secure HR Management</footer>
 
 <script>
 /* SUPABASE CONFIGURATION */
@@ -243,103 +179,241 @@ const SUPABASE_URL = "https://soxelkicpckxirvbtmfy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_i6ISZrns3VI9M0VsGQO8dw_f8cynJx3";
 const ADMIN_UUID = "a3f5bd5f-7ec6-4cb6-b1bc-29481aa7bc49";
 
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
- auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
-});
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let data={employees:[],departments:[],attendance:[],leaves:[],payroll:[],performance:[]};
-let charts={};
+let employees = [];
+let attendance = [];
+let payroll = [];
 let inactivityTimer;
 
-const $=id=>document.getElementById(id);
-const today=()=>new Date().toLocaleDateString("en-CA");
-const money=n=>"₹"+Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const employeeName=id=>data.employees.find(e=>e.id===id)?.full_name||"Unknown";
+function showMessage(id,text,type="success"){
+ const el=document.getElementById(id);
+ el.textContent=text;
+ el.className="message "+type;
+ el.style.display="block";
+}
+function hidePages(){
+ ["loginPage","forgotPage","updatePage","appPage"].forEach(id=>
+ document.getElementById(id).classList.add("hidden"));
+}
+function showLogin(){hidePages();document.getElementById("loginPage").classList.remove("hidden")}
+function showForgot(){
+ hidePages();
+ document.getElementById("forgotPage").classList.remove("hidden");
+ document.getElementById("forgotEmail").value=document.getElementById("email").value;
+}
+function showUpdate(){hidePages();document.getElementById("updatePage").classList.remove("hidden")}
 
-function msg(text){alert(text)}
-function setLoginMsg(t){$("loginMsg").textContent=t}
-
-async function login(email,password){
- const {data:d,error}=await db.auth.signInWithPassword({email,password});
- if(error)throw error;
- const {data:allowed,error:adminError}=await db.rpc("is_ems_admin");
- if(adminError||allowed!==true){
+async function login(){
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ if(!email||!password)return showMessage("loginMsg","Enter email and password.","error");
+ const btn=document.getElementById("loginBtn");
+ btn.disabled=true;btn.textContent="Checking...";
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+ btn.disabled=false;btn.textContent="Secure Login";
+ if(error)return showMessage("loginMsg",error.message,"error");
+ const user=data.user;
+ if(!user || user.id!==ADMIN_UUID){
   await db.auth.signOut();
-  throw new Error("This account is not an authorized EMS administrator.");
+  return showMessage("loginMsg","Admin UUID mismatch. Check ADMIN_UUID.","error");
  }
- await startApp();
-}
-$("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();setLoginMsg("Checking account...");
- try{await login($("email").value.trim(),$("password").value)}
- catch(err){setLoginMsg(err.message)}
-});
-
-async function forgotPassword(){
- const email=$("email").value.trim();
- if(!email)return msg("Enter your admin email first.");
- const {error}=await db.auth.resetPasswordForEmail(email);
- msg(error?error.message:"Password reset email request sent. Check your inbox.");
-}
-async function logout(){await db.auth.signOut();location.reload()}
-
-async function checkAdmin(){
- const {data:userData}=await db.auth.getUser();
- if(!userData.user)return false;
- const {data:allowed,error}=await db.rpc("is_ems_admin");
- if(error||allowed!==true)return false;
- return userData.user.id===ADMIN_UUID;
+ const {data:allowed,error:rpcError}=await db.rpc("is_ems_admin");
+ if(rpcError){
+  await db.auth.signOut();
+  return showMessage("loginMsg","Admin verification error: "+rpcError.message,"error");
+ }
+ if(allowed!==true){
+  await db.auth.signOut();
+  return showMessage("loginMsg","This account is not registered as an EMS admin.","error");
+ }
+ await enterApp(user);
 }
 
-async function startApp(){
- const ok=await checkAdmin();
- if(!ok){await db.auth.signOut();$("login").classList.remove("hidden");$("app").classList.add("hidden");setLoginMsg("Admin verification failed.");return}
- $("login").classList.add("hidden");$("app").classList.remove("hidden");
- $("today").textContent=new Date().toLocaleDateString("en-IN",{dateStyle:"medium"});
+async function sendReset(){
+ const email=document.getElementById("forgotEmail").value.trim();
+ if(!email)return showMessage("forgotMsg","Enter your registered email.","error");
+ const btn=document.getElementById("resetBtn");
+ btn.disabled=true;btn.textContent="Sending...";
+ const {error}=await db.auth.resetPasswordForEmail(email,{
+  redirectTo:"https://vsakthivel2882005-collab.github.io/Employee-Management/"
+ });
+ btn.disabled=false;btn.textContent="Send Reset Link";
+ if(error)return showMessage("forgotMsg",error.message,"error");
+ showMessage("forgotMsg","If this email is registered, a password reset link has been sent. Check Inbox and Spam.","success");
+}
+
+async function updatePassword(){
+ const p=document.getElementById("newPassword").value;
+ const c=document.getElementById("confirmPassword").value;
+ if(p.length<8)return showMessage("updateMsg","Password must be at least 8 characters.","error");
+ if(p!==c)return showMessage("updateMsg","Passwords do not match.","error");
+ const {error}=await db.auth.updateUser({password:p});
+ if(error)return showMessage("updateMsg",error.message,"error");
+ showMessage("updateMsg","Password updated. You can now login.","success");
+ setTimeout(async()=>{await db.auth.signOut();showLogin()},1800);
+}
+
+async function enterApp(user){
+ hidePages();
+ document.getElementById("appPage").classList.remove("hidden");
+ document.getElementById("headerUser").textContent=user.email||"Admin";
  await loadAll();
- setupInactivity();
+ resetInactivity();
+}
+
+async function logout(){
+ clearTimeout(inactivityTimer);
+ await db.auth.signOut();
+ showLogin();
+}
+
+function resetInactivity(){
+ clearTimeout(inactivityTimer);
+ inactivityTimer=setTimeout(logout,20*60*1000);
+}
+["click","mousemove","keydown","touchstart"].forEach(event=>
+ document.addEventListener(event,()=>{if(!document.getElementById("appPage").classList.contains("hidden"))resetInactivity()})
+);
+
+function openTab(tab,button){
+ ["dashboard","employees","attendance","payroll"].forEach(t=>
+ document.getElementById(t+"Tab").classList.add("hidden"));
+ document.getElementById(tab+"Tab").classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
 }
 
 async function loadAll(){
- const tables=["employees","departments","attendance","leaves","payroll","employee_performance"];
- const results=await Promise.all(tables.map(t=>db.from(t).select("*").order("created_at",{ascending:false}).limit(1000)));
- for(let i=0;i<tables.length;i++){
-  if(results[i].error){console.error(tables[i],results[i].error);msg("Database error in "+tables[i]+": "+results[i].error.message);return}
-  const key=tables[i]==="employee_performance"?"performance":tables[i];
-  data[key]=results[i].data||[];
- }
- renderAll();
+ await Promise.all([loadEmployees(),loadAttendance(),loadPayroll()]);
+ updateStats();
 }
 
-function setupInactivity(){
- ["click","keydown","touchstart"].forEach(ev=>document.addEventListener(ev,()=>{
-  clearTimeout(inactivityTimer);
-  inactivityTimer=setTimeout(logout,20*60*1000);
- },{passive:true}));
+async function loadEmployees(){
+ const {data,error}=await db.from("ems_employees").select("*").order("created_at",{ascending:false});
+ if(error){console.error(error);return showMessage("empMsg",error.message,"error")}
+ employees=data||[];
+ renderEmployees();fillEmployeeSelects();updateStats();
+}
+function renderEmployees(){
+ const q=document.getElementById("empSearch").value.toLowerCase();
+ const rows=employees.filter(e=>(e.name||"").toLowerCase().includes(q)||(e.phone||"").includes(q));
+ document.getElementById("employeeRows").innerHTML=rows.map(e=>`
+ <tr><td>${esc(e.name)}</td><td>${esc(e.phone)}</td><td>${esc(e.department)}</td><td>${esc(e.salary)}</td>
+ <td><button class="secondary" onclick="editEmployee('${e.id}')">Edit</button>
+ <button class="danger" onclick="deleteEmployee('${e.id}')">Delete</button></td></tr>`).join("");
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+async function saveEmployee(){
+ const id=document.getElementById("empId").value;
+ const row={
+  name:document.getElementById("empName").value.trim(),
+  phone:document.getElementById("empPhone").value.trim(),
+  email:document.getElementById("empEmail").value.trim(),
+  department:document.getElementById("empDepartment").value.trim(),
+  designation:document.getElementById("empDesignation").value.trim(),
+  salary:Number(document.getElementById("empSalary").value)||0
+ };
+ if(!row.name)return showMessage("empMsg","Employee name is required.","error");
+ const result=id?await db.from("ems_employees").update(row).eq("id",id):await db.from("ems_employees").insert(row);
+ if(result.error)return showMessage("empMsg",result.error.message,"error");
+ clearEmployee();await loadEmployees();showMessage("empMsg","Employee saved successfully.");
+}
+function editEmployee(id){
+ const e=employees.find(x=>x.id===id);if(!e)return;
+ document.getElementById("empId").value=e.id;
+ document.getElementById("empName").value=e.name||"";
+ document.getElementById("empPhone").value=e.phone||"";
+ document.getElementById("empEmail").value=e.email||"";
+ document.getElementById("empDepartment").value=e.department||"";
+ document.getElementById("empDesignation").value=e.designation||"";
+ document.getElementById("empSalary").value=e.salary||0;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function clearEmployee(){
+ ["empId","empName","empPhone","empEmail","empDepartment","empDesignation","empSalary"].forEach(id=>document.getElementById(id).value="");
+}
+async function deleteEmployee(id){
+ if(!confirm("Delete this employee?"))return;
+ const {error}=await db.from("ems_employees").delete().eq("id",id);
+ if(error)return showMessage("empMsg",error.message,"error");
+ await loadEmployees();
 }
 
-function renderAll(){
- renderDashboard();renderEmployees();renderDepartments();renderAttendance();renderLeaves();renderPayroll();renderPerformance();fillEmployeeSelects();
-}
-function fillSelect(id,items,placeholder){
- const el=$(id);if(!el)return;
- const old=el.value;
- el.innerHTML=`<option value="">${placeholder||"Select"}</option>`+items.map(x=>`<option value="${esc(x.id)}">${esc(x.full_name||x.name)}</option>`).join("");
- if(items.some(x=>String(x.id)===old))el.value=old;
-}
 function fillEmployeeSelects(){
- ["attEmployee","leaveEmployee","payEmployee","perfEmployee"].forEach(id=>fillSelect(id,data.employees.filter(e=>e.status==="Active"),"Select employee"));
- const dep=$("empDepartment");const old=dep.value;
- dep.innerHTML='<option value="">Select department</option>'+data.departments.map(d=>`<option value="${esc(d.name)}">${esc(d.name)}</option>`).join("");
- dep.value=old;
+ ["attendanceEmployee","payrollEmployee"].forEach(id=>{
+  document.getElementById(id).innerHTML=employees.map(e=>
+   `<option value="${esc(e.id)}">${esc(e.name)}</option>`).join("");
+ });
 }
-function renderDashboard(){
- const active=data.employees.filter(e=>e.status==="Active");
- $("totalEmp").textContent=data.employees.length;
- $("activeEmp").textContent=active.length;
- $("presentEmp").textContent=data.attendance.filter(a=>a.attendance_date===today()&&["Present","Late","Work From Home"].includes(a.status)).length;
- $("pendingLeaves").textContent=data.leaves.filter(l=>l.status==="Pending").length;
- $("recentEmployees").innerHTML=data.employees.slice(0,5).map(e=>`<p>${esc(e.full_name)} <span class="tag">${esc(e.employee_code)}</span> <span class="muted">${esc(e.designation||"")}</span></p>`).join("")||"No employees yet";
- makeChart("employeeChart","bar",["Active","Inactive","Resigned"],[data.employees.filter(e=>e.status==="Active").length,data.employees.filter(e=>e.status==="Inactive").length,data.employees.filter(e=>e.status==="Resigned").length]);
- makeChart("attendanceChart","doughnut",["Present","Abs
+
+async function loadAttendance(){
+ const {data,error}=await db.from("ems_attendance").select("*").order("date",{ascending:false});
+ if(error){console.error(error);return}
+ attendance=data||[];
+ document.getElementById("attendanceRows").innerHTML=attendance.map(a=>{
+  const e=employees.find(x=>x.id===a.employee_id);
+  return `<tr><td>${esc(a.date)}</td><td>${esc(e?.name||a.employee_id)}</td><td>${esc(a.status)}</td></tr>`;
+ }).join("");
+ updateStats();
+}
+async function saveAttendance(){
+ const employee_id=document.getElementById("attendanceEmployee").value;
+ const date=document.getElementById("attendanceDate").value;
+ const status=document.getElementById("attendanceStatus").value;
+ if(!employee_id||!date)return showMessage("attendanceMsg","Select employee and date.","error");
+ const {error}=await db.from("ems_attendance").insert({employee_id,date,status});
+ if(error)return showMessage("attendanceMsg",error.message,"error");
+ await loadAttendance();showMessage("attendanceMsg","Attendance saved.");
+}
+
+async function loadPayroll(){
+ const {data,error}=await db.from("ems_payroll").select("*").order("created_at",{ascending:false});
+ if(error){console.error(error);return}
+ payroll=data||[];
+ document.getElementById("payrollRows").innerHTML=payroll.map(p=>{
+  const e=employees.find(x=>x.id===p.employee_id);
+  return `<tr><td>${esc(e?.name||p.employee_id)}</td><td>${esc(p.month)}</td><td>₹${esc(p.amount)}</td></tr>`;
+ }).join("");
+ updateStats();
+}
+async function savePayroll(){
+ const employee_id=document.getElementById("payrollEmployee").value;
+ const month=document.getElementById("payrollMonth").value;
+ const amount=Number(document.getElementById("payrollAmount").value);
+ if(!employee_id||!month||!amount)return showMessage("payrollMsg","Complete all fields.","error");
+ const {error}=await db.from("ems_payroll").insert({employee_id,month,amount});
+ if(error)return showMessage("payrollMsg",error.message,"error");
+ await loadPayroll();showMessage("payrollMsg","Payroll saved.");
+}
+function updateStats(){
+ document.getElementById("totalEmployees").textContent=employees.length;
+ const today=new Date().toISOString().slice(0,10);
+ document.getElementById("presentCount").textContent=attendance.filter(a=>a.date===today&&a.status==="Present").length;
+ document.getElementById("payrollCount").textContent=payroll.length;
+}
+
+document.getElementById("attendanceDate").value=new Date().toISOString().slice(0,10);
+document.getElementById("payrollMonth").value=new Date().toISOString().slice(0,7);
+
+/* Handle password recovery link */
+db.auth.onAuthStateChange((event,session)=>{
+ if(event==="PASSWORD_RECOVERY"){
+  showUpdate();
+ }
+});
+
+/* Restore existing session */
+(async()=>{
+ const {data:{session}}=await db.auth.getSession();
+ if(session){
+  if(session.user.id===ADMIN_UUID){
+   const {data:allowed,error}=await db.rpc("is_ems_admin");
+   if(!error&&allowed===true)await enterApp(session.user);
+   else await db.auth.signOut();
+  }else await db.auth.signOut();
+ }
+})();
+</script>
+</body>
+</html>
