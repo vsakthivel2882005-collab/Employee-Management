@@ -8,608 +8,1240 @@
 <title>EMS 2.0 | Premium HR Management</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
 <style>
-:root{
- --gold:#d6ad55;--bg:#080808;--panel:#151515;
- --text:#f5f5f5;--muted:#aaa;
+:root {
+  --gold:#d6ad55;
+  --bg:#080808;
+  --panel:#151515;
+  --border:#333;
+  --text:#fff;
+  --muted:#aaa;
+  --red:#e74c3c;
+  --green:#27ae60;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-.hidden{display:none!important}
-header{
- padding:17px 22px;border-bottom:1px solid #333;
- display:flex;justify-content:space-between;align-items:center
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
 }
-.logo{font-size:21px;font-weight:bold;color:var(--gold)}
-.container{max-width:1100px;margin:30px auto;padding:0 16px}
-.card{
- background:var(--panel);border:1px solid #333;
- border-radius:13px;padding:22px;margin-bottom:18px
+button,input,select {
+  font:inherit;
 }
-h2,h3{color:var(--gold)}
-input,select{
- width:100%;padding:12px;margin:7px 0 14px;
- border-radius:7px;border:1px solid #444;
- background:#090909;color:white
+button {
+  cursor:pointer;
 }
-button{
- border:0;border-radius:7px;padding:11px 16px;
- background:var(--gold);color:#111;font-weight:bold;margin:3px
+.hidden {display:none!important}
+.gold {color:var(--gold)}
+.muted {color:var(--muted)}
+.container {
+  width:min(1200px,94%);
+  margin:auto;
 }
-button.secondary{background:#292929;color:white;border:1px solid #555}
-button.danger{background:#7f1d1d;color:white}
-.login{max-width:420px;margin:65px auto}
-.message{
- padding:12px;margin:12px 0;border-radius:7px;
- background:#252525;display:none;overflow-wrap:anywhere;line-height:1.5
+.card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:16px;
 }
-.success{border:1px solid #228b55;color:#8ee5b2}
-.error{border:1px solid #a33;color:#ffaaaa}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
-.stat{background:#202020;padding:18px;border-radius:10px}
-.stat strong{font-size:27px;color:var(--gold);display:block;margin-top:8px}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-nav button{background:#222;color:white;border:1px solid #444}
-nav button.active{background:var(--gold);color:#111}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{padding:12px;text-align:left;border-bottom:1px solid #333}
-th{color:var(--gold)}
-.small{color:var(--muted);font-size:13px}
-a{color:var(--gold)}
-.report-buttons{display:flex;gap:8px;flex-wrap:wrap}
-footer{text-align:center;color:#777;padding:25px}
-@media(max-width:600px){
- header{padding:14px}.container{margin:18px auto}
- .card{padding:16px}.login{margin:35px 15px}
+h1,h2,h3 {margin-top:0}
+input,select {
+  width:100%;
+  background:#090909;
+  color:white;
+  border:1px solid #444;
+  padding:12px;
+  border-radius:7px;
+  margin:7px 0 14px;
+}
+input:focus,select:focus {
+  outline:1px solid var(--gold);
+  border-color:var(--gold);
+}
+label {
+  color:#ccc;
+  font-size:13px;
+}
+.btn {
+  border:0;
+  border-radius:7px;
+  padding:11px 16px;
+  background:var(--gold);
+  color:#111;
+  font-weight:bold;
+  margin:4px;
+}
+.btn:hover {opacity:.85}
+.btn-dark {
+  background:#292929;
+  color:white;
+  border:1px solid #555;
+}
+.btn-red {background:#b93232;color:white}
+.btn-green {background:#218c52;color:white}
+.login-screen {
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+.login-box {
+  width:100%;
+  max-width:420px;
+  background:#151515;
+  border:1px solid #514329;
+  border-radius:16px;
+  padding:30px;
+  box-shadow:0 0 35px #000;
+}
+.logo {
+  text-align:center;
+  color:var(--gold);
+  font-size:27px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+.subtitle {
+  text-align:center;
+  color:#aaa;
+  margin-bottom:25px;
+}
+.topbar {
+  background:#111;
+  border-bottom:1px solid #4c3c20;
+  padding:15px 0;
+}
+.top-inner {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.brand {
+  font-size:21px;
+  font-weight:bold;
+  color:var(--gold);
+}
+.nav {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin:18px 0;
+}
+.nav button {
+  background:#191919;
+  color:#ddd;
+  border:1px solid #444;
+  padding:10px 13px;
+  border-radius:7px;
+}
+.nav button.active {
+  background:var(--gold);
+  color:#111;
+}
+.page {display:none}
+.page.active {display:block}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.stat {
+  background:#171717;
+  border:1px solid #493b22;
+  border-radius:10px;
+  padding:20px;
+}
+.stat small {color:#aaa}
+.stat h2 {
+  color:var(--gold);
+  margin:12px 0 0;
+}
+.table-wrap {
+  overflow-x:auto;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  min-width:650px;
+}
+th,td {
+  text-align:left;
+  padding:12px;
+  border-bottom:1px solid #333;
+  font-size:13px;
+}
+th {color:var(--gold)}
+tr:hover {background:#202020}
+.message {
+  padding:12px;
+  border-radius:7px;
+  margin:12px 0;
+  font-size:14px;
+  display:none;
+}
+.message.show {display:block}
+.message.error {background:#451d1d;color:#ffbaba}
+.message.success {background:#173b26;color:#b8ffd0}
+.section-title {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.form-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:0 15px;
+}
+.actions {white-space:nowrap}
+.footer {
+  color:#777;
+  text-align:center;
+  padding:25px 0;
+  font-size:12px;
+}
+@media(max-width:750px) {
+  .stats {grid-template-columns:repeat(2,1fr)}
+  .form-grid {grid-template-columns:1fr}
+  .top-inner {align-items:flex-start}
+  .nav button {font-size:12px;padding:9px}
+}
+@media(max-width:400px) {
+  .stats {grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<header>
- <div class="logo">EMS <span style="color:white">2.0</span></div>
- <div id="headerUser" class="small"></div>
+<!-- LOGIN -->
+<section id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <div class="logo">EMS 2.0</div>
+    <div class="subtitle">Premium HR Management System</div>
+
+    <div id="loginMessage" class="message"></div>
+
+    <form id="loginForm">
+      <label>Admin Email</label>
+      <input id="loginEmail" type="email"
+        placeholder="Enter admin email" required>
+
+      <label>Password</label>
+      <input id="loginPassword" type="password"
+        placeholder="Enter password" required>
+
+      <button class="btn" type="submit" id="loginButton"
+        style="width:100%">LOGIN</button>
+    </form>
+
+    <p style="text-align:center">
+      <button class="btn-dark" type="button"
+        onclick="showForgot()">Forgot Password?</button>
+    </p>
+
+    <div id="forgotBox" class="hidden">
+      <h3 class="gold">Reset Password</h3>
+      <label>Registered Email</label>
+      <input id="forgotEmail" type="email"
+        placeholder="Enter registered email">
+      <button class="btn" onclick="sendReset()">Send Reset Link</button>
+      <button class="btn-dark" onclick="showLogin()">Back</button>
+    </div>
+
+    <div id="updateBox" class="hidden">
+      <h3 class="gold">Update Password</h3>
+      <label>New Password</label>
+      <input id="newPassword" type="password"
+        placeholder="New password">
+      <button class="btn" onclick="updatePassword()">Update Password</button>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION -->
+<div id="appScreen" class="hidden">
+
+<header class="topbar">
+  <div class="container top-inner">
+    <div class="brand">EMS <span style="color:white">2.0</span></div>
+    <div>
+      <span class="gold" id="adminLabel">Admin</span>
+      <button class="btn btn-red" onclick="logout()">Logout</button>
+    </div>
+  </div>
 </header>
 
-<!-- LOGIN -->
-<section id="loginPage" class="container login">
- <div class="card">
-  <h2>Admin Login</h2>
-  <p class="small">Secure HR Management Portal</p>
-  <div id="loginMsg" class="message"></div>
-  <form id="loginForm">
-   <label>Admin Email</label>
-   <input id="email" type="email" placeholder="Enter admin email" required>
-   <label>Password</label>
-   <input id="password" type="password" placeholder="Enter password" required>
-   <button id="loginBtn" type="submit" style="width:100%">Secure Login</button>
-  </form>
-  <p style="text-align:center">
-   <a href="#" onclick="showForgot();return false">Forgot Password?</a>
-  </p>
- </div>
+<main class="container">
+
+<nav class="nav">
+  <button class="active" data-tab="dashboard" onclick="openTab('dashboard',this)">Dashboard</button>
+  <button data-tab="employees" onclick="openTab('employees',this)">Employees</button>
+  <button data-tab="attendance" onclick="openTab('attendance',this)">Attendance</button>
+  <button data-tab="payroll" onclick="openTab('payroll',this)">Payroll</button>
+  <button data-tab="reports" onclick="openTab('reports',this)">Reports</button>
+</nav>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+  <h2 class="gold">Dashboard</h2>
+
+  <div class="stats">
+    <div class="stat">
+      <small>Total Employees</small>
+      <h2 id="totalEmployees">0</h2>
+    </div>
+    <div class="stat">
+      <small>Present Today</small>
+      <h2 id="presentToday">0</h2>
+    </div>
+    <div class="stat">
+      <small>Absent Today</small>
+      <h2 id="absentToday">0</h2>
+    </div>
+    <div class="stat">
+      <small>Total Payroll</small>
+      <h2 id="totalPayroll">₹0</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="gold">System Status</h3>
+    <p id="systemStatus" class="muted">Checking database...</p>
+    <button class="btn btn-dark" onclick="loadAll()">Refresh Data</button>
+  </div>
 </section>
 
-<!-- FORGOT PASSWORD -->
-<section id="forgotPage" class="container login hidden">
- <div class="card">
-  <h2>Reset Password</h2>
-  <p class="small">Enter your registered admin email.</p>
-  <div id="forgotMsg" class="message"></div>
-  <input id="forgotEmail" type="email" placeholder="Admin email">
-  <button id="resetBtn" style="width:100%" onclick="sendReset()">Send Reset Link</button>
-  <p><a href="#" onclick="showLogin();return false">Back to Login</a></p>
- </div>
+<!-- EMPLOYEES -->
+<section id="employees" class="page">
+  <div class="section-title">
+    <h2 class="gold">Employee Management</h2>
+    <button class="btn" onclick="clearEmployeeForm()">+ Add Employee</button>
+  </div>
+
+  <div class="card">
+    <h3 id="employeeFormTitle">Add Employee</h3>
+    <input type="hidden" id="employeeId">
+
+    <div class="form-grid">
+      <div>
+        <label>Employee Name</label>
+        <input id="empName" placeholder="Employee name">
+      </div>
+      <div>
+        <label>Phone</label>
+        <input id="empPhone" placeholder="Phone number">
+      </div>
+      <div>
+        <label>Email</label>
+        <input id="empEmail" type="email" placeholder="Email">
+      </div>
+      <div>
+        <label>Department</label>
+        <input id="empDepartment" placeholder="Department">
+      </div>
+      <div>
+        <label>Designation</label>
+        <input id="empDesignation" placeholder="Designation">
+      </div>
+      <div>
+        <label>Monthly Salary</label>
+        <input id="empSalary" type="number" min="0" placeholder="Salary">
+      </div>
+    </div>
+
+    <button class="btn" onclick="saveEmployee()">Save Employee</button>
+    <button class="btn btn-dark" onclick="clearEmployeeForm()">Clear</button>
+    <div id="employeeMessage" class="message"></div>
+  </div>
+
+  <div class="card">
+    <h3>Employee List</h3>
+    <input id="employeeSearch" placeholder="Search employee..."
+      oninput="renderEmployees()">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Phone</th>
+            <th>Department</th><th>Designation</th>
+            <th>Salary</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="employeeTable"></tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<!-- UPDATE PASSWORD -->
-<section id="updatePage" class="container login hidden">
- <div class="card">
-  <h2>Create New Password</h2>
-  <div id="updateMsg" class="message"></div>
-  <input id="newPassword" type="password" placeholder="New password (minimum 8 characters)">
-  <input id="confirmPassword" type="password" placeholder="Confirm new password">
-  <button id="updateBtn" style="width:100%" onclick="updatePassword()">Update Password</button>
- </div>
+<!-- ATTENDANCE -->
+<section id="attendance" class="page">
+  <h2 class="gold">Attendance Management</h2>
+
+  <div class="card">
+    <h3>Mark Attendance</h3>
+    <label>Employee</label>
+    <select id="attendanceEmployee"></select>
+
+    <label>Date</label>
+    <input type="date" id="attendanceDate">
+
+    <label>Status</label>
+    <select id="attendanceStatus">
+      <option value="Present">Present</option>
+      <option value="Absent">Absent</option>
+      <option value="Leave">Leave</option>
+    </select>
+
+    <button class="btn" onclick="saveAttendance()">Save Attendance</button>
+    <div id="attendanceMessage" class="message"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <h3>Attendance Records</h3>
+      <input type="date" id="attendanceFilter"
+        style="max-width:200px" onchange="loadAttendance()">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Employee</th><th>Date</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody id="attendanceTable"></tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<!-- MAIN APP -->
-<main id="appPage" class="container hidden">
+<!-- PAYROLL -->
+<section id="payroll" class="page">
+  <h2 class="gold">Payroll Management</h2>
 
- <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-  <h2>HR Dashboard</h2>
-  <button class="danger" onclick="logout()">Logout</button>
- </div>
-
- <nav>
-  <button class="active" onclick="openTab('dashboard',this)">Dashboard</button>
-  <button onclick="openTab('employees',this)">Employees</button>
-  <button onclick="openTab('attendance',this)">Attendance</button>
-  <button onclick="openTab('payroll',this)">Payroll</button>
-  <button onclick="openTab('reports',this)">Reports</button>
- </nav>
-
- <!-- DASHBOARD -->
- <section id="dashboardTab">
-  <div class="grid">
-   <div class="stat">Total Employees<strong id="totalEmployees">0</strong></div>
-   <div class="stat">Present Today<strong id="presentCount">0</strong></div>
-   <div class="stat">Payroll Records<strong id="payrollCount">0</strong></div>
-  </div>
   <div class="card">
-   <h3>Welcome to EMS 2.0</h3>
-   <p>Manage employees, attendance, payroll and reports from one place.</p>
-  </div>
- </section>
+    <h3>Add Payroll</h3>
 
- <!-- EMPLOYEES -->
- <section id="employeesTab" class="hidden">
-  <div class="card">
-   <h3>Add / Edit Employee</h3>
-   <input id="empId" type="hidden">
+    <label>Employee</label>
+    <select id="payrollEmployee"></select>
 
-   <label>Employee Name</label>
-   <input id="empName" placeholder="Employee name">
+    <label>Payroll Month</label>
+    <input type="month" id="payrollMonth">
 
-   <label>Mobile Number</label>
-   <input id="empPhone" placeholder="Mobile number">
+    <label>Amount</label>
+    <input type="number" id="payrollAmount"
+      min="0" placeholder="Salary amount">
 
-   <label>Email</label>
-   <input id="empEmail" type="email" placeholder="Email">
-
-   <label>Department</label>
-   <input id="empDepartment" placeholder="Department">
-
-   <label>Designation</label>
-   <input id="empDesignation" placeholder="Designation">
-
-   <label>Monthly Salary</label>
-   <input id="empSalary" type="number" min="0" placeholder="Salary">
-
-   <button onclick="saveEmployee()">Save Employee</button>
-   <button class="secondary" onclick="clearEmployee()">Clear</button>
-   <div id="empMsg" class="message"></div>
+    <button class="btn" onclick="savePayroll()">Save Payroll</button>
+    <div id="payrollMessage" class="message"></div>
   </div>
 
   <div class="card">
-   <h3>Employee List</h3>
-   <input id="empSearch" placeholder="Search employees..." oninput="renderEmployees()">
-   <div class="table-wrap">
-    <table>
-     <thead>
-      <tr><th>Name</th><th>Phone</th><th>Department</th><th>Salary</th><th>Actions</th></tr>
-     </thead>
-     <tbody id="employeeRows"></tbody>
-    </table>
-   </div>
+    <h3>Payroll Records</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Employee</th><th>Month</th><th>Amount</th><th>Action</th></tr>
+        </thead>
+        <tbody id="payrollTable"></tbody>
+      </table>
+    </div>
   </div>
- </section>
+</section>
 
- <!-- ATTENDANCE -->
- <section id="attendanceTab" class="hidden">
-  <div class="card">
-   <h3>Mark Attendance</h3>
-   <label>Employee</label>
-   <select id="attendanceEmployee"></select>
-   <label>Date</label>
-   <input type="date" id="attendanceDate">
-   <label>Status</label>
-   <select id="attendanceStatus">
-    <option>Present</option><option>Absent</option><option>Leave</option>
-   </select>
-   <button onclick="saveAttendance()">Save Attendance</button>
-   <div id="attendanceMsg" class="message"></div>
-  </div>
-  <div class="card">
-   <h3>Attendance Records</h3>
-   <div class="table-wrap">
-    <table>
-     <thead><tr><th>Date</th><th>Employee</th><th>Status</th></tr></thead>
-     <tbody id="attendanceRows"></tbody>
-    </table>
-   </div>
-  </div>
- </section>
-
- <!-- PAYROLL -->
- <section id="payrollTab" class="hidden">
-  <div class="card">
-   <h3>Add Payroll Record</h3>
-   <label>Employee</label>
-   <select id="payrollEmployee"></select>
-   <label>Month</label>
-   <input type="month" id="payrollMonth">
-   <label>Amount</label>
-   <input type="number" id="payrollAmount" min="0" placeholder="Salary amount">
-   <button onclick="savePayroll()">Save Payroll</button>
-   <div id="payrollMsg" class="message"></div>
-  </div>
-  <div class="card">
-   <h3>Payroll History</h3>
-   <div class="table-wrap">
-    <table>
-     <thead><tr><th>Employee</th><th>Month</th><th>Amount</th></tr></thead>
-     <tbody id="payrollRows"></tbody>
-    </table>
-   </div>
-  </div>
- </section>
-
- <!-- REPORTS -->
- <section id="reportsTab" class="hidden">
+<!-- REPORTS -->
+<section id="reports" class="page">
+  <h2 class="gold">Reports & Downloads</h2>
 
   <div class="card">
-   <h3>Employee Reports</h3>
-   <p class="small">Export all employee records.</p>
-   <div class="report-buttons">
-    <button onclick="exportEmployeesPDF()">Download Employee PDF</button>
-    <button onclick="exportEmployeesExcel()">Download Employee Excel</button>
-   </div>
+    <h3>Employee Reports</h3>
+    <button class="btn" onclick="exportEmployeesExcel()">Employee Excel</button>
+    <button class="btn" onclick="exportEmployeesPDF()">Employee PDF</button>
   </div>
 
   <div class="card">
-   <h3>Attendance Reports</h3>
-   <label>From Date</label>
-   <input type="date" id="attendanceFrom">
-   <label>To Date</label>
-   <input type="date" id="attendanceTo">
-   <div class="report-buttons">
-    <button onclick="exportAttendancePDF()">Download Attendance PDF</button>
-    <button onclick="exportAttendanceExcel()">Download Attendance Excel</button>
-   </div>
+    <h3>Attendance Reports</h3>
+    <label>Report Date</label>
+    <input type="date" id="reportDate">
+    <button class="btn" onclick="exportAttendanceExcel()">Attendance Excel</button>
+    <button class="btn" onclick="exportAttendancePDF()">Attendance PDF</button>
   </div>
 
   <div class="card">
-   <h3>Monthly Payroll Reports</h3>
-   <label>Select Month</label>
-   <input type="month" id="reportPayrollMonth">
-   <div class="report-buttons">
-    <button onclick="exportPayrollPDF()">Download Payroll PDF</button>
-    <button onclick="exportPayrollExcel()">Download Payroll Excel</button>
-   </div>
-   <p class="small">Payroll report includes the selected month's records and total amount.</p>
+    <h3>Payroll Reports</h3>
+    <label>Payroll Month</label>
+    <input type="month" id="reportMonth">
+    <button class="btn" onclick="exportPayrollExcel()">Payroll Excel</button>
+    <button class="btn" onclick="exportPayrollPDF()">Payroll PDF</button>
   </div>
+</section>
 
-  <div class="card">
-   <h3>Report Information</h3>
-   <p class="small">Reports are generated using the data currently loaded from your Supabase database.</p>
-   <p class="small">PDF files are generated in your browser. Excel files are downloaded in XLSX format.</p>
-  </div>
-
- </section>
 </main>
 
-<footer>EMS 2.0 | Secure HR Management</footer>
+<footer class="footer">EMS 2.0 | Premium HR Management</footer>
+</div>
 
 <script>
-"use strict";
+// ======================================
+// SUPABASE CONFIGURATION
+// ======================================
 
-/* SUPABASE CONFIG */
 const SUPABASE_URL = "https://soxelkicpckxirvbtmfy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_i6ISZrns3VI9M0VsGQO8dw_f8cynJx3";
 const ADMIN_UUID = "a3f5bd5f-7ec6-4cb6-b1bc-29481aa7bc49";
 
-let db = null;
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 let employees = [];
-let attendance = [];
-let payroll = [];
-let inactivityTimer = null;
+let attendanceRecords = [];
+let payrollRecords = [];
+let currentUser = null;
+let busy = false;
 
-try {
- if (!window.supabase?.createClient) {
-  throw new Error("Supabase library could not load.");
- }
- db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-} catch(error) {
- alert("Supabase initialization error: " + error.message);
+// ======================================
+// COMMON FUNCTIONS
+// ======================================
+
+function el(id) {
+  return document.getElementById(id);
 }
 
-/* COMMON */
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function monthNow() {
+  return new Date().toISOString().slice(0,7);
+}
+
 function showMessage(id,text,type="success") {
- const el=document.getElementById(id);
- if(!el)return;
- el.textContent=text;
- el.className="message "+type;
- el.style.display="block";
-}
-function hideMessage(id) {
- const el=document.getElementById(id);
- if(el)el.style.display="none";
-}
-function esc(value) {
- return String(value ?? "").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- }[c]));
-}
-function requireDatabase() {
- if(!db)throw new Error("Supabase is not initialized. Refresh the website.");
-}
-function hidePages() {
- ["loginPage","forgotPage","updatePage","appPage"].forEach(id=>
-  document.getElementById(id).classList.add("hidden")
- );
-}
-function showLogin() {
- hidePages();
- document.getElementById("loginPage").classList.remove("hidden");
-}
-function showForgot() {
- hidePages();
- document.getElementById("forgotPage").classList.remove("hidden");
- document.getElementById("forgotEmail").value=document.getElementById("email").value.trim();
- hideMessage("forgotMsg");
-}
-function showUpdate() {
- hidePages();
- document.getElementById("updatePage").classList.remove("hidden");
- hideMessage("updateMsg");
+  const box = el(id);
+  box.textContent = text;
+  box.className = "message show " + type;
 }
 
-/* LOGIN */
-document.getElementById("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();
- await login();
+function clearMessage(id) {
+  const box = el(id);
+  box.textContent = "";
+  box.className = "message";
+}
+
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[ch]);
+}
+
+function money(value) {
+  return "₹" + Number(value || 0).toLocaleString("en-IN");
+}
+
+function setBusy(buttonId,value) {
+  if (!buttonId) return;
+  const b = el(buttonId);
+  if (b) b.disabled = value;
+}
+
+// ======================================
+// LOGIN / AUTHENTICATION
+// ======================================
+
+el("loginForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  if (busy) return;
+  busy = true;
+  setBusy("loginButton",true);
+  clearMessage("loginMessage");
+
+  const email = el("loginEmail").value.trim();
+  const password = el("loginPassword").value;
+
+  try {
+    const {data,error} = await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    const user = data.user;
+    if (!user || user.id !== ADMIN_UUID) {
+      await db.auth.signOut();
+      throw new Error("This account is not authorized as EMS Admin.");
+    }
+
+    const {data:isAdmin,error:adminError} =
+      await db.rpc("is_ems_admin");
+
+    if (adminError) throw adminError;
+
+    if (isAdmin !== true) {
+      await db.auth.signOut();
+      throw new Error("Admin permission not found in database.");
+    }
+
+    currentUser = user;
+    await enterApp();
+
+  } catch(error) {
+    showMessage("loginMessage",error.message || "Login failed","error");
+  } finally {
+    busy = false;
+    setBusy("loginButton",false);
+  }
 });
 
-async function login() {
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
- const btn=document.getElementById("loginBtn");
+async function verifyAdmin(user) {
+  if (!user || user.id !== ADMIN_UUID) return false;
 
- if(!email||!password)return showMessage("loginMsg","Enter email and password.","error");
+  const {data,error} = await db.rpc("is_ems_admin");
+  if (error) throw error;
 
- btn.disabled=true;
- btn.textContent="Checking...";
- hideMessage("loginMsg");
-
- try {
-  requireDatabase();
-  const {data,error}=await db.auth.signInWithPassword({email,password});
-  if(error)throw error;
-
-  const user=data.user;
-  if(!user)throw new Error("Supabase user not found.");
-
-  if(user.id!==ADMIN_UUID) {
-   await db.auth.signOut();
-   throw new Error("Admin UUID mismatch. Check the configured Admin UUID.");
-  }
-
-  const {data:allowed,error:rpcError}=await db.rpc("is_ems_admin");
-  if(rpcError)throw rpcError;
-  if(allowed!==true)throw new Error("Admin access denied. Check ems_admins.");
-
-  await enterApp(user);
- } catch(error) {
-  console.error(error);
-  showMessage("loginMsg",error.message||"Login failed.","error");
- } finally {
-  btn.disabled=false;
-  btn.textContent="Secure Login";
- }
+  return data === true;
 }
 
-/* PASSWORD RECOVERY */
+async function enterApp() {
+  el("loginScreen").classList.add("hidden");
+  el("appScreen").classList.remove("hidden");
+  el("adminLabel").textContent = currentUser.email || "Admin";
+  await loadAll();
+}
+
+async function restoreSession() {
+  try {
+    const {data,error} = await db.auth.getSession();
+    if (error) throw error;
+
+    const session = data.session;
+    if (!session) return;
+
+    const allowed = await verifyAdmin(session.user);
+
+    if (!allowed) {
+      await db.auth.signOut();
+      return;
+    }
+
+    currentUser = session.user;
+    await enterApp();
+
+  } catch(error) {
+    console.error("Session restore:",error.message);
+  }
+}
+
+db.auth.onAuthStateChange((event,session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    el("loginScreen").classList.remove("hidden");
+    el("forgotBox").classList.add("hidden");
+    el("updateBox").classList.remove("hidden");
+  }
+});
+
+async function logout() {
+  await db.auth.signOut();
+  currentUser = null;
+  el("appScreen").classList.add("hidden");
+  el("loginScreen").classList.remove("hidden");
+  showLogin();
+}
+
+function showForgot() {
+  el("loginForm").classList.add("hidden");
+  el("forgotBox").classList.remove("hidden");
+  el("updateBox").classList.add("hidden");
+}
+
+function showLogin() {
+  el("loginForm").classList.remove("hidden");
+  el("forgotBox").classList.add("hidden");
+  el("updateBox").classList.add("hidden");
+}
+
 async function sendReset() {
- const email=document.getElementById("forgotEmail").value.trim();
- const btn=document.getElementById("resetBtn");
- if(!email)return showMessage("forgotMsg","Enter your registered email.","error");
+  const email = el("forgotEmail").value.trim();
 
- btn.disabled=true;
- btn.textContent="Sending...";
- hideMessage("forgotMsg");
+  if (!email) {
+    alert("Enter your registered email.");
+    return;
+  }
 
- try {
-  requireDatabase();
-  const {error}=await db.auth.resetPasswordForEmail(email,{
-   redirectTo:"https://vsakthivel2882005-collab.github.io/Employee-Management/"
-  });
-  if(error)throw error;
-  showMessage("forgotMsg","Reset link request accepted. Check Inbox and Spam.","success");
- } catch(error) {
-  showMessage("forgotMsg",error.message,"error");
- } finally {
-  btn.disabled=false;
-  btn.textContent="Send Reset Link";
- }
+  try {
+    const {error} = await db.auth.resetPasswordForEmail(email,{
+      redirectTo:location.origin + location.pathname
+    });
+
+    if (error) throw error;
+    alert("Password reset link sent. Check your email.");
+
+  } catch(error) {
+    alert(error.message);
+  }
 }
 
 async function updatePassword() {
- const password=document.getElementById("newPassword").value;
- const confirm=document.getElementById("confirmPassword").value;
- const btn=document.getElementById("updateBtn");
+  const password = el("newPassword").value;
 
- if(password.length<8)return showMessage("updateMsg","Password must be at least 8 characters.","error");
- if(password!==confirm)return showMessage("updateMsg","Passwords do not match.","error");
+  if (password.length < 8) {
+    alert("Password must contain at least 8 characters.");
+    return;
+  }
 
- btn.disabled=true;
- try {
-  requireDatabase();
-  const {data}=await db.auth.getSession();
-  if(!data.session)throw new Error("Reset session expired. Request a new reset link.");
+  try {
+    const {error} = await db.auth.updateUser({password});
+    if (error) throw error;
 
-  const {error}=await db.auth.updateUser({password});
-  if(error)throw error;
+    alert("Password updated successfully.");
+    await logout();
 
-  showMessage("updateMsg","Password updated successfully. Please login again.","success");
-  setTimeout(async()=>{await db.auth.signOut();showLogin();},1800);
- } catch(error) {
-  showMessage("updateMsg",error.message,"error");
- } finally {
-  btn.disabled=false;
- }
+  } catch(error) {
+    alert(error.message);
+  }
 }
 
-/* ENTER APP */
-async function enterApp(user) {
- hidePages();
- document.getElementById("appPage").classList.remove("hidden");
- document.getElementById("headerUser").textContent=user.email||"Admin";
- try {
-  await loadAll();
- } catch(error) {
-  console.error(error);
-  alert("Dashboard loading error: "+error.message);
- }
- resetInactivity();
-}
+// ======================================
+// NAVIGATION
+// ======================================
 
-/* LOGOUT AND TIMEOUT */
-async function logout() {
- clearTimeout(inactivityTimer);
- try { requireDatabase(); await db.auth.signOut(); }
- catch(error) { console.error(error); }
- document.getElementById("headerUser").textContent="";
- showLogin();
-}
-function resetInactivity() {
- clearTimeout(inactivityTimer);
- inactivityTimer=setTimeout(logout,20*60*1000);
-}
-["click","keydown","touchstart"].forEach(event=>{
- document.addEventListener(event,()=>{
-  const app=document.getElementById("appPage");
-  if(app&&!app.classList.contains("hidden"))resetInactivity();
- });
-});
-
-/* NAVIGATION */
 function openTab(tab,button) {
- ["dashboard","employees","attendance","payroll","reports"].forEach(name=>
-  document.getElementById(name+"Tab").classList.add("hidden")
- );
- document.getElementById(tab+"Tab").classList.remove("hidden");
- document.querySelectorAll("nav button").forEach(btn=>btn.classList.remove("active"));
- button.classList.add("active");
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+  });
+
+  document.querySelectorAll(".nav button").forEach(b => {
+    b.classList.remove("active");
+  });
+
+  el(tab).classList.add("active");
+
+  if (button) button.classList.add("active");
+
+  if (tab === "employees") renderEmployees();
+  if (tab === "attendance") loadAttendance();
+  if (tab === "payroll") renderPayroll();
 }
 
-/* LOAD DATABASE */
+// ======================================
+// LOAD DATABASE
+// ======================================
+
 async function loadAll() {
- await loadEmployees();
- await loadAttendance();
- await loadPayroll();
- updateStats();
-}
-async function loadEmployees() {
- const {data,error}=await db.from("ems_employees").select("*").order("created_at",{ascending:false});
- if(error)throw error;
- employees=data||[];
- renderEmployees();
- fillEmployeeSelects();
- updateStats();
-}
-async function loadAttendance() {
- const {data,error}=await db.from("ems_attendance").select("*").order("date",{ascending:false});
- if(error)throw error;
- attendance=data||[];
- renderAttendance();
- updateStats();
-}
-async function loadPayroll() {
- const {data,error}=await db.from("ems_payroll").select("*").order("created_at",{ascending:false});
- if(error)throw error;
- payroll=data||[];
- renderPayroll();
- updateStats();
+  el("systemStatus").textContent = "Loading database...";
+
+  try {
+    const [e,a,p] = await Promise.all([
+      db.from("ems_employees").select("*").order("id",{ascending:false}),
+      db.from("ems_attendance").select("*").order("date",{ascending:false}),
+      db.from("ems_payroll").select("*").order("created_at",{ascending:false})
+    ]);
+
+    if (e.error) throw e.error;
+    if (a.error) throw a.error;
+    if (p.error) throw p.error;
+
+    employees = e.data || [];
+    attendanceRecords = a.data || [];
+    payrollRecords = p.data || [];
+
+    renderEmployees();
+    fillEmployeeSelects();
+    renderAttendance();
+    renderPayroll();
+    updateDashboard();
+
+    el("systemStatus").textContent = "Connected successfully to Supabase.";
+  } catch(error) {
+    el("systemStatus").textContent = "Database error: " + error.message;
+    console.error(error);
+  }
 }
 
-/* EMPLOYEES */
-function renderEmployees() {
- const search=document.getElementById("empSearch").value.toLowerCase();
- const rows=employees.filter(e=>
-  (e.name||"").toLowerCase().includes(search)||
-  (e.phone||"").includes(search)
- );
- document.getElementById("employeeRows").innerHTML=rows.map(e=>`
-  <tr>
-   <td>${esc(e.name)}</td><td>${esc(e.phone)}</td>
-   <td>${esc(e.department)}</td><td>₹${esc(e.salary)}</td>
-   <td>
-    <button class="secondary" onclick="editEmployee(${Number(e.id)})">Edit</button>
-    <button class="danger" onclick="deleteEmployee(${Number(e.id)})">Delete</button>
-   </td>
-  </tr>
- `).join("");
+// ======================================
+// EMPLOYEE MANAGEMENT
+// ======================================
+
+function clearEmployeeForm() {
+  [
+    "employeeId","empName","empPhone","empEmail",
+    "empDepartment","empDesignation","empSalary"
+  ].forEach(id => el(id).value = "");
+
+  el("employeeFormTitle").textContent = "Add Employee";
+  clearMessage("employeeMessage");
 }
+
 async function saveEmployee() {
- const id=document.getElementById("empId").value;
- const row={
-  name:document.getElementById("empName").value.trim(),
-  phone:document.getElementById("empPhone").value.trim(),
-  email:document.getElementById("empEmail").value.trim(),
-  department:document.getElementById("empDepartment").value.trim(),
-  designation:document.getElementById("empDesignation").value.trim(),
-  salary:Number(document.getElementById("empSalary").value)||0
- };
- if(!row.name)return showMessage("empMsg","Employee name is required.","error");
- if(row.salary<0)return showMessage("empMsg","Salary cannot be negative.","error");
+  const id = el("employeeId").value;
 
- try {
-  const result=id
-   ?await db.from("ems_employees").update(row).eq("id",id)
-   :await db.from("ems_employees").insert(row);
-  if(result.error)throw result.error;
-  clearEmployee();
-  await loadEmployees();
-  showMessage("empMsg","Employee saved successfully.");
- } catch(error) {
-  showMessage("empMsg",error.message,"error");
- }
+  const record = {
+    name:el("empName").value.trim(),
+    phone:el("empPhone").value.trim(),
+    email:el("empEmail").value.trim(),
+    department:el("empDepartment").value.trim(),
+    designation:el("empDesignation").value.trim(),
+    salary:Number(el("empSalary").value || 0)
+  };
+
+  if (!record.name) {
+    showMessage("employeeMessage","Employee name is required.","error");
+    return;
+  }
+
+  try {
+    let result;
+
+    if (id) {
+      result = await db.from("ems_employees")
+        .update(record).eq("id",Number(id));
+    } else {
+      result = await db.from("ems_employees").insert(record);
+    }
+
+    if (result.error) throw result.error;
+
+    showMessage("employeeMessage",
+      id ? "Employee updated." : "Employee added.");
+
+    clearEmployeeForm();
+    await loadAll();
+
+  } catch(error) {
+    showMessage("employeeMessage",error.message,"error");
+  }
 }
+
+function renderEmployees() {
+  const search = el("employeeSearch").value.toLowerCase();
+
+  const list = employees.filter(e =>
+    [e.name,e.phone,e.email,e.department,e.designation]
+      .some(v => String(v || "").toLowerCase().includes(search))
+  );
+
+  el("employeeTable").innerHTML = list.map(e => `
+    <tr>
+      <td>${safe(e.id)}</td>
+      <td>${safe(e.name)}</td>
+      <td>${safe(e.phone)}</td>
+      <td>${safe(e.department)}</td>
+      <td>${safe(e.designation)}</td>
+      <td>${money(e.salary)}</td>
+      <td class="actions">
+        <button class="btn" onclick="editEmployee(${Number(e.id)})">Edit</button>
+        <button class="btn btn-red" onclick="deleteEmployee(${Number(e.id)})">Delete</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
 function editEmployee(id) {
- const e=employees.find(x=>Number(x.id)===Number(id));
- if(!e)return;
- document.getElementById("empId").value=e.id;
- document.getElementById("empName").value=e.name||"";
- document.getElementById("empPhone").value=e.phone||"";
- document.getElementById("empEmail").value=e.email||"";
- document.getElementById("empDepartment").value=e.department||"";
- document.getElementById("empDesignation").value=e.designation||"";
- document.getElementById("empSalary").value=e.salary||0;
- window.scrollTo({top:0,behavior:"smooth"});
+  const e = employees.find(x => Number(x.id) === Number(id));
+  if (!e) return;
+
+  el("employeeId").value = e.id;
+  el("empName").value = e.name || "";
+  el("empPhone").value = e.phone || "";
+  el("empEmail").value = e.email || "";
+  el("empDepartment").value = e.department || "";
+  el("empDesignation").value = e.designation || "";
+  el("empSalary").value = e.salary || "";
+
+  el("employeeFormTitle").textContent = "Edit Employee";
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-function clearEmployee() {
- ["empId","empName","empPhone","empEmail","empDepartment","empDesignation","empSalary"].forEach(id=>
-  document.getElementById(id).value=""
- );
-}
+
 async function deleteEmployee(id) {
- if(!confirm("Delete this employee?"))return;
- try {
-  const {error}=await db.from("ems_employees").delete().eq("id",id);
-  if(error)throw error;
-  await loadAll();
-  showMessage("empMsg","Employee deleted successfully.");
- } catch(error) {
-  showMessage("empMsg",error.message,"error");
- }
+  if (!confirm("Delete this employee?")) return;
+
+  try {
+    const {error} = await db.from("ems_employees")
+      .delete().eq("id",Number(id));
+
+    if (error) throw error;
+    await loadAll();
+  } catch(error) {
+    alert(error.message);
+  }
 }
 
-/* EMPLOYEE DROPDOWNS */
+// ======================================
+// EMPLOYEE DROPDOWNS
+// ======================================
+
 function fillEmployeeSelects() {
- ["attendanceEmployee","payrollEmployee"].forEach(id=>{
-  const select=document.getElementById(id);
-  select.innerHTML=employees.map(e=>
-   `<option value="${Number(e.id)}">${esc(e.name)}</option>`
+  const options = employees.map(e =>
+    `<option value="${Number(e.id)}">${safe(e.name)} (#${safe(e.id)})</option>`
   ).join("");
- });
+
+  el("attendanceEmployee").innerHTML =
+    '<option value="">Select Employee</option>' + options;
+
+  el("payrollEmployee").innerHTML =
+    '<option value="">Select Employee</option>' + options;
 }
 
-/* ATTENDANCE */
-function renderAttendance() {
- document.getElementById("attendanceRows").innerHTML=attendance.map(r=>{
-  const e=employees.find(x=>Number(x.id)===Number(r.employee_id));
-  return `<tr><td>${esc(r.date)}</td><td>${esc(e?.name||r.employee_id)}</td><td>${esc(r.status)}</td></tr>`;
- }).join("");
-}
+// ======================================
+// ATTENDANCE
+// ======================================
+
 async function saveAttendance() {
- const employee_id=document.getElem
+  const employee_id = Number(el("attendanceEmployee").value);
+  const date = el("attendanceDate").value;
+  const status = el("attendanceStatus").value;
+
+  if (!employee_id || !date) {
+    showMessage("attendanceMessage","Select employee and date.","error");
+    return;
+  }
+
+  try {
+    const {error} = await db.from("ems_attendance").upsert({
+      employee_id,
+      date,
+      status
+    },{onConflict:"employee_id,date"});
+
+    if (error) throw error;
+
+    showMessage("attendanceMessage","Attendance saved.");
+    await loadAll();
+
+  } catch(error) {
+    showMessage("attendanceMessage",error.message,"error");
+  }
+}
+
+async function loadAttendance() {
+  try {
+    const date = el("attendanceFilter").value;
+
+    let query = db.from("ems_attendance")
+      .select("*").order("date",{ascending:false});
+
+    if (date) query = query.eq("date",date);
+
+    const {data,error} = await query;
+    if (error) throw error;
+
+    attendanceRecords = data || [];
+    renderAttendance();
+    updateDashboard();
+
+  } catch(error) {
+    console.error(error);
+  }
+}
+
+function renderAttendance() {
+  el("attendanceTable").innerHTML = attendanceRecords.map(r => {
+    const employee = employees.find(e =>
+      Number(e.id) === Number(r.employee_id)
+    );
+
+    return `
+      <tr>
+        <td>${safe(employee?.name || "Unknown")}</td>
+        <td>${safe(r.date)}</td>
+        <td>${safe(r.status)}</td>
+        <td>
+          <button class="btn btn-red"
+            onclick="deleteAttendance(${Number(r.employee_id)},'${safe(r.date)}')">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function deleteAttendance(employeeId,date) {
+  if (!confirm("Delete this attendance record?")) return;
+
+  try {
+    const {error} = await db.from("ems_attendance")
+      .delete()
+      .eq("employee_id",employeeId)
+      .eq("date",date);
+
+    if (error) throw error;
+    await loadAll();
+
+  } catch(error) {
+    alert(error.message);
+  }
+}
+
+// ======================================
+// PAYROLL
+// ======================================
+
+async function savePayroll() {
+  const employee_id = Number(el("payrollEmployee").value);
+  const payroll_month = el("payrollMonth").value;
+  const amount = Number(el("payrollAmount").value);
+
+  if (!employee_id || !payroll_month || amount < 0) {
+    showMessage("payrollMessage","Enter valid payroll details.","error");
+    return;
+  }
+
+  try {
+    const {error} = await db.from("ems_payroll").insert({
+      employee_id,
+      payroll_month,
+      amount
+    });
+
+    if (error) throw error;
+
+    showMessage("payrollMessage","Payroll saved successfully.");
+    el("payrollAmount").value = "";
+    await loadAll();
+
+  } catch(error) {
+    showMessage("payrollMessage",error.message,"error");
+  }
+}
+
+function renderPayroll() {
+  el("payrollTable").innerHTML = payrollRecords.map(r => {
+    const employee = employees.find(e =>
+      Number(e.id) === Number(r.employee_id)
+    );
+
+    return `
+      <tr>
+        <td>${safe(employee?.name || "Unknown")}</td>
+        <td>${safe(r.payroll_month)}</td>
+        <td>${money(r.amount)}</td>
+        <td>
+          <button class="btn btn-red"
+            onclick="deletePayroll(${Number(r.id)})">Delete</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+async function deletePayroll(id) {
+  if (!confirm("Delete this payroll record?")) return;
+
+  try {
+    const {error} = await db.from("ems_payroll")
+      .delete().eq("id",Number(id));
+
+    if (error) throw error;
+    await loadAll();
+
+  } catch(error) {
+    alert(error.message);
+  }
+}
+
+// ======================================
+// DASHBOARD
+// ======================================
+
+function updateDashboard() {
+  const date = today();
+
+  const todayRecords = attendanceRecords.filter(r => r.date === date);
+
+  el("totalEmployees").textContent = employees.length;
+
+  el("presentToday").textContent =
+    todayRecords.filter(r => r.status === "Present").length;
+
+  el("absentToday").textContent =
+    todayRecords.filter(r => r.status === "Absent").length;
+
+  const total = payrollRecords.reduce((sum,r) =>
+    sum + Number(r.amount || 0),0);
+
+  el("totalPayroll").textContent = money(total);
+}
+
+// ======================================
+// REPORT HELPERS
+// ======================================
+
+function downloadExcel(data,fileName,sheetName) {
+  if (!window.XLSX) {
+    alert("Excel library failed to load.");
+    return;
+  }
+
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,sheetName);
+  XLSX.writeFile(wb,fileName);
+}
+
+function downloadPDF(title,headers,rows,fileName) {
+  if (!window.jspdf) {
+    alert("PDF library failed to load.");
+    return;
+  }
+
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text(title,14,18);
+
+  doc.autoTable({
+    head:[headers],
+    body:rows,
+    startY:25,
+    theme:"grid"
+  });
+
+  doc.save(fileName);
+}
+
+// ======================================
+// EMPLOYEE REPORTS
+// ======================================
+
+function employeeReportData() {
+  return employees.map(e => ({
+    ID:e.id,
+    Name:e.name,
+    Phone:e.phone,
+    Email:e.email,
+    Department:e.department,
+    Designation:e.designation,
+    Salary:e.salary
+  }));
+}
+
+function exportEmployeesExcel() {
+  downloadExcel(employeeReportData(),"EMS_Employees.xlsx","Employees");
+}
+
+function exportEmployeesPDF() {
+  downloadPDF(
+    "EMS Employee Report",
+    ["ID","Name","Phone","Department","Designation","Salary"],
+    employees.map(e => [
+      e.id,e.name,e.phone,e.department,e.designation,money(e.salary)
+    ]),
+    "EMS_Employees.pdf"
+  );
+}
+
+// ======================================
+// ATTENDANCE REPORTS
+// ======================================
+
+function attendanceReportData() {
+  const date = el("reportDate").value;
+
+  return attendanceRecords
+    .filter(r => !date || r.date === date)
+    .map(r => {
+      const employee = employees.find(e =>
+        Number(e.id) === Number(r.employee_id)
+      );
+
+      return {
+        Employee:employee?.name || "Unknown",
+        Date:r.date,
+        Status:r.status
+      };
+    });
+}
+
+function exportAttendanceExcel() {
+  downloadExcel(
+    attendanceReportData(),
+    "EMS_Attendance.xlsx",
+    "Attendance"
+  );
+}
+
+function exportAttendancePDF() {
+  const data = attendanceReportData();
+
+  downloadPDF(
+    "EMS Attendance Report",
+    ["Employee","Date","Status"],
+    data.map(r => [r.Employee,r.Date,r.Status]),
+    "EMS_Attendance.pdf"
+  );
+}
+
+// ======================================
+// PAYROLL REPORTS
+// ======================================
+
+function payrollReportData() {
+  const month = el("reportMonth").value;
+
+  return payrollRecords
+    .filter(r => !month || r.payroll_month === month)
+    .map(r => {
+      const employee = employees.find(e =>
+        Number(e.id) === Number(r.employee_id)
+      );
+
+      return {
+        Employee:employee?.name || "Unknown",
+        Month:r.payroll_month,
+        Amount:Number(r.amount || 0)
+      };
+    });
+}
+
+function exportPayrollExcel() {
+  downloadExcel(
+    payrollReportData(),
+    "EMS_Payroll.xlsx",
+    "Payroll"
+  );
+}
+
+function exportPayrollPDF() {
+  const data = payrollReportData();
+
+  downloadPDF(
+    "EMS Payroll Report",
+    ["Employee","Month","Amount"],
+    data.map(r => [
+      r.Employee,r.Month,money(r.Amount)
+    ]),
+    "EMS_Payroll.pdf"
+  );
+}
+
+// ======================================
+// INITIALIZE
+// ======================================
+
+el("attendanceDate").value = today();
+el("attendanceFilter").value = today();
+el("reportDate").value = today();
+el("payrollMonth").value = monthNow();
+el("reportMonth").value = monthNow();
+
+restoreSession();
+
+</script>
+</body>
+</html>
